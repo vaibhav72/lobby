@@ -7,14 +7,14 @@ import 'package:lobby/cubits/posts/posts_cubit.dart';
 import 'package:lobby/repository/post/post_repository.dart';
 import 'package:lobby/screens/home_screens/contest_screens/view_contest_participants.dart';
 
-class ContestList extends StatefulWidget {
-  const ContestList({Key key}) : super(key: key);
+class CategoryContestList extends StatefulWidget {
+  const CategoryContestList({Key key}) : super(key: key);
 
   @override
-  _ContestListState createState() => _ContestListState();
+  _CategoryContestListState createState() => _CategoryContestListState();
 }
 
-class _ContestListState extends State<ContestList> {
+class _CategoryContestListState extends State<CategoryContestList> {
   @override
   Widget build(BuildContext context) {
     return Container(

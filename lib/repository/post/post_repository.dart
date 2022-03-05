@@ -12,7 +12,7 @@ class PostRepository extends BasePostRepository {
   PostRepository({FirebaseFirestore firebaseFirestore})
       : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
   @override
-  Stream<List<PostModel>> getPosts(String categoryId) {
+  Stream<List<PostModel>> getSpecificPosts(String categoryId) {
     try {
       return collection
           .where("categoryId", isEqualTo: categoryId)
@@ -68,6 +68,17 @@ class PostRepository extends BasePostRepository {
       });
     } catch (error) {
       throw Exception(error.toString());
+    }
+  }
+
+  @override
+  Stream<List<PostModel>> getAllRandomPosts() {
+    // TODO: implement getAllRandomPosts
+    try {
+      return collection.orderBy("postCreated").snapshots().map((snapshot) =>
+          snapshot.docs.map((doc) => PostModel.fromSnapshot(doc)).toList());
+    } catch (_) {
+      print(_.toString());
     }
   }
 }

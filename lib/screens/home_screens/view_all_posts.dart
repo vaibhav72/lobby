@@ -10,38 +10,26 @@ import 'package:lobby/screens/home_screens/contest_screens/create_post.dart';
 import 'package:lobby/screens/home_screens/contest_screens/post_tile.dart';
 import 'package:lobby/utils/utils.dart';
 
-class ViewCategoryPosts extends StatefulWidget {
-  final CategoryModel category;
-  const ViewCategoryPosts({Key key, this.category}) : super(key: key);
+class ViewAllPosts extends StatefulWidget {
+  const ViewAllPosts({
+    Key key,
+  }) : super(key: key);
 
   @override
-  _ViewCategoryPostsState createState() => _ViewCategoryPostsState();
+  _ViewAllPostsState createState() => _ViewAllPostsState();
 }
 
-class _ViewCategoryPostsState extends State<ViewCategoryPosts> {
+class _ViewAllPostsState extends State<ViewAllPosts> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => PostsCubit(
         postRepository: PostRepository(),
-      )..loadSpecificPosts(widget.category.categoryId),
+      )..loadRandomPosts(),
       child: BlocBuilder<PostsCubit, PostsState>(
         builder: (context, state) {
           if (state is PostsLoaded) {
             return Scaffold(
-              appBar: AppBar(
-                title: Text(widget.category.categoryName),
-              ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PostCreateWidget(
-                                categoryModel: widget.category,
-                              )));
-                },
-              ),
               body: ListView.builder(
                   itemCount: state.data?.length ?? 0,
                   itemBuilder: (context, index) {

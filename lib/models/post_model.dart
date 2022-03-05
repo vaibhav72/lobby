@@ -81,7 +81,7 @@ class PostModel {
       postCreated: (doc['postCreated'] as Timestamp).toDate(),
       postImage: doc['postImage'] ?? '',
       id: doc.id,
-      postUserName: doc['postUserName'] ?? '',
+      // postUserName: doc['postUserName'] ?? '',
       postVideo: doc['postVideo'] ?? '',
       postDescription: doc['postDescription'] ?? '',
       postUser: (doc['postUser']),
