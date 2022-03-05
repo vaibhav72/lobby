@@ -3,8 +3,9 @@ import 'package:lobby/cubits/navigation/navigation_cubit.dart';
 import 'package:lobby/cubits/signup/signup_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lobby/screens/home_screens/contest.dart';
-import 'package:lobby/screens/home_screens/contest_list.dart';
+import 'package:lobby/screens/home_screens/category_contest_list.dart';
 import 'package:lobby/screens/home_screens/settings.dart';
+import 'package:lobby/screens/home_screens/view_all_posts.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key key}) : super(key: key);
@@ -15,7 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  List widgetsList = [ContestList(), Contest(), Settings()];
+  List widgetsList = [ViewAllPosts(), CategoryContestList(), Settings()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

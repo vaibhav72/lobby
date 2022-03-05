@@ -124,7 +124,9 @@ class _PostCreateWidgetState extends State<PostCreateWidget>
                           imageBuilder: (path) => ClipRRect(
                             borderRadius: BorderRadius.circular(16),
                             child: Image(
-                              image: FileImage(File(path)),
+                              image: uploadedFileUrl1.trim().isNotEmpty
+                                  ? FileImage(File(path))
+                                  : AssetImage(path),
                               width: 300,
                               height: 300,
                               fit: BoxFit.cover,
@@ -189,22 +191,26 @@ class _PostCreateWidgetState extends State<PostCreateWidget>
                   MaterialButton(
                     color: Colors.blue,
                     onPressed: () {
-                      BlocProvider.of<CreatePostCubit>(context).addPost(
-                          title: textController.text,
-                          description: descriptionController.text,
-                          currentUserImage: BlocProvider.of<AuthBloc>(context)
-                              .state
-                              .user
-                              .displayImageUrl,
-                          postUserName: BlocProvider.of<AuthBloc>(context)
-                              .state
-                              .user
-                              .user
-                              .displayName,
-                          currentUserRef: FirebaseFirestore.instance
-                              .collection('users')
-                              .doc(FirebaseAuth.instance.currentUser.uid),
-                          media: selectedMedia);
+                      if (selectedMedia?.storagePath != null)
+                        BlocProvider.of<CreatePostCubit>(context).addPost(
+                            title: textController.text,
+                            description: descriptionController.text,
+                            currentUserImage: BlocProvider.of<AuthBloc>(context)
+                                .state
+                                .user
+                                .displayImageUrl,
+                            postUserName: BlocProvider.of<AuthBloc>(context)
+                                .state
+                                .user
+                                .user
+                                .displayName,
+                            currentUserRef: FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(FirebaseAuth.instance.currentUser.uid),
+                            media: selectedMedia);
+                      else
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Please select an image")));
                     },
                     child: Text("Post"),
                   )

@@ -12,27 +12,38 @@ import 'package:lobby/utils/utils.dart';
 part 'posts_state.dart';
 
 class PostsCubit extends Cubit<PostsState> {
-  StreamSubscription _postStreamSubscription;
+  StreamSubscription _categoryPostStreamSubscription;
+
   final PostRepository postRepository;
 
-  final CategoryModel categoryModel;
-  PostsCubit(
-      {@required PostRepository postRepository, @required this.categoryModel})
-      : postRepository = postRepository ?? PostRepository(),
+  // final CategoryModel categoryModel;
+  PostsCubit({
+    @required PostRepository postRepository,
+  })  : postRepository = postRepository ?? PostRepository(),
         super(PostsLoading());
 
-  void loadPosts() {
-    _postStreamSubscription?.cancel();
-    _postStreamSubscription =
-        postRepository.getPosts(categoryModel.categoryId).listen((data) {
+  void loadSpecificPosts(String categoryId) {
+    _categoryPostStreamSubscription?.cancel();
+    _categoryPostStreamSubscription =
+        postRepository.getSpecificPosts(categoryId).listen((data) {
       print(data);
+
+      updatePosts(data: data);
+    });
+  }
+
+  void loadRandomPosts() {
+    _categoryPostStreamSubscription?.cancel();
+    _categoryPostStreamSubscription =
+        postRepository.getAllRandomPosts().listen((data) {
+      data.shuffle();
       updatePosts(data: data);
     });
   }
 
   void updatePosts({List<PostModel> data}) {
     print("here");
-    emit(PostsLoaded(data: data));
+    if (!isClosed) emit(PostsLoaded(data: data));
   }
 
   likePost(
