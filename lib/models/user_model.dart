@@ -13,6 +13,7 @@ class UserModel {
   bool isPremium;
   bool isAdmin;
   String email;
+  String phoneNumber;
   DateTime createdAt;
   double balance;
   DocumentReference documentReference;
@@ -26,6 +27,7 @@ class UserModel {
     @required this.email,
     @required this.balance,
     @required this.createdAt,
+    @required this.phoneNumber,
     @required this.documentReference,
   });
   static CollectionReference get collection =>
@@ -37,9 +39,11 @@ class UserModel {
       bool isPremium,
       bool isAdmin,
       String email,
+      String phoneNumber,
       DocumentReference documentReference}) {
     return UserModel(
         user: user ?? this.user,
+        phoneNumber: phoneNumber ?? this.phoneNumber,
         displayName: displayName ?? this.displayName,
         displayImageUrl: displayImageUrl ?? this.displayImageUrl,
         isPremium: isPremium ?? this.isPremium,
@@ -53,6 +57,7 @@ class UserModel {
     return {
       // 'user': user,
       'displayImageUrl': displayImageUrl,
+      'phoneNumber': phoneNumber,
       'isPremium': isPremium,
       'isAdmin': isAdmin,
       'email': email,
@@ -64,6 +69,7 @@ class UserModel {
     return UserModel(
         // user: User.fromMap(map['user']),
         displayImageUrl: map['displayImageUrl'] ?? '',
+        phoneNumber: map['phoneNumber'] ?? '',
         isPremium: map['isPremium'] ?? false,
         isAdmin: map['isAdmin'] ?? false,
         email: map['email'] ?? '',
@@ -77,7 +83,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(user: $user, displayImageUrl: $displayImageUrl, isPremium: $isPremium, isAdmin: $isAdmin, email: $email)';
+    return 'UserModel(user: $user, displayImageUrl: $displayImageUrl, isPremium: $isPremium, isAdmin: $isAdmin, email: $email) , phoneNumber: $phoneNumber, balance: $balance, createdAt: $createdAt, documentReference: $documentReference';
   }
 
   @override
@@ -89,7 +95,8 @@ class UserModel {
         other.displayImageUrl == displayImageUrl &&
         other.isPremium == isPremium &&
         other.isAdmin == isAdmin &&
-        other.email == email;
+        other.email == email &&
+        other.phoneNumber == phoneNumber;
   }
 
   @override
@@ -98,6 +105,7 @@ class UserModel {
         displayImageUrl.hashCode ^
         isPremium.hashCode ^
         isAdmin.hashCode ^
-        email.hashCode;
+        email.hashCode ^
+        phoneNumber.hashCode;
   }
 }

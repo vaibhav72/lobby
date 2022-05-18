@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lobby/cubits/navigation/navigation_cubit.dart';
-import 'package:lobby/cubits/signup/signup_cubit.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lobby/screens/home_screens/contest.dart';
 import 'package:lobby/screens/home_screens/category_contest_list.dart';

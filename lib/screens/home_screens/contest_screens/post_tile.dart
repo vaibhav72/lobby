@@ -2,7 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:lobby/bloc/auth/auth_bloc.dart';
+import 'package:lobby/cubits/cubit/auth_cubit.dart';
+
 import 'package:lobby/cubits/posts/posts_cubit.dart';
 import 'package:lobby/models/post_model.dart';
 
@@ -49,14 +50,14 @@ class PostTile extends StatelessWidget {
                         onPressed: () {
                           if (!(post.likes.isNotEmpty &&
                               post.likes.contains(
-                                BlocProvider.of<AuthBloc>(context)
+                                BlocProvider.of<AuthCubit>(context)
                                     .state
                                     .user
                                     .documentReference,
                               )))
                             BlocProvider.of<PostsCubit>(context).likePost(
                                 currentUserRef:
-                                    BlocProvider.of<AuthBloc>(context)
+                                    BlocProvider.of<AuthCubit>(context)
                                         .state
                                         .user
                                         .documentReference,
@@ -65,7 +66,7 @@ class PostTile extends StatelessWidget {
                         icon: Icon(Icons.favorite_border,
                             color: post.likes.isNotEmpty &&
                                     post.likes.contains(
-                                      BlocProvider.of<AuthBloc>(context)
+                                      BlocProvider.of<AuthCubit>(context)
                                           .state
                                           .user
                                           .documentReference,

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lobby/bloc/auth/auth_bloc.dart';
+
 import 'package:lobby/cubits/posts/posts_cubit.dart';
 import 'package:lobby/models/category_model.dart';
 import 'package:lobby/models/post_model.dart';
