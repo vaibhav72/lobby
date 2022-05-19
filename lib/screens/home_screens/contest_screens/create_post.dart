@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lobby/bloc/auth/auth_bloc.dart';
+
 import 'package:lobby/cubits/create_post/create_post_cubit.dart';
+import 'package:lobby/cubits/cubit/auth_cubit.dart';
 import 'package:lobby/cubits/posts/posts_cubit.dart';
 import 'package:lobby/models/category_model.dart';
 import 'package:lobby/repository/post/post_repository.dart';
@@ -191,15 +192,16 @@ class _PostCreateWidgetState extends State<PostCreateWidget>
                   MaterialButton(
                     color: Colors.blue,
                     onPressed: () {
-                      if (selectedMedia?.storagePath != null)
+                      if (selectedMedia?.storagePath != null) {
                         BlocProvider.of<CreatePostCubit>(context).addPost(
                             title: textController.text,
                             description: descriptionController.text,
-                            currentUserImage: BlocProvider.of<AuthBloc>(context)
-                                .state
-                                .user
-                                .displayImageUrl,
-                            postUserName: BlocProvider.of<AuthBloc>(context)
+                            currentUserImage:
+                                BlocProvider.of<AuthCubit>(context)
+                                    .state
+                                    .user
+                                    .displayImageUrl,
+                            postUserName: BlocProvider.of<AuthCubit>(context)
                                 .state
                                 .user
                                 .user
@@ -208,7 +210,7 @@ class _PostCreateWidgetState extends State<PostCreateWidget>
                                 .collection('users')
                                 .doc(FirebaseAuth.instance.currentUser.uid),
                             media: selectedMedia);
-                      else
+                      } else
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Please select an image")));
                     },

@@ -1,12 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lobby/bloc/auth/auth_bloc.dart';
-import 'package:lobby/bloc/category/category_bloc.dart';
-import 'package:lobby/cubits/navigation/navigation_cubit.dart';
-import 'package:lobby/cubits/signup/signup_cubit.dart';
 
-import 'package:lobby/repository/auth_repository.dart';
+import 'package:lobby/bloc/category/category_bloc.dart';
+import 'package:lobby/cubits/cubit/auth_cubit.dart';
+import 'package:lobby/cubits/navigation/navigation_cubit.dart';
+
 import 'package:lobby/repository/category/category_repository.dart';
 import 'package:lobby/screens/auth_screens/onboarding_screen.dart';
 
@@ -25,17 +24,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider(create: (context) => AuthRepository()),
         RepositoryProvider(create: (context) => CategoryRepository())
       ],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider(
-              create: (context) =>
-                  AuthBloc(authRepository: context.read<AuthRepository>())),
-          BlocProvider(
-              create: (context) =>
-                  SignupCubit(authRepository: context.read<AuthRepository>())),
+          BlocProvider(create: (context) => AuthCubit()),
           BlocProvider(create: (context) => NavigationCubit()),
           BlocProvider(
               create: (context) => CategoryBloc(
@@ -45,6 +38,9 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Flutter Demo',
           theme: ThemeData(
+            scaffoldBackgroundColor: Colors.white,
+            appBarTheme: AppBarTheme(color: Colors.white, elevation: 0),
+            fontFamily: 'Poppins',
             primarySwatch: Colors.blue,
           ),
           home: const SplashScreen(),
@@ -82,12 +78,12 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
           )
-        : BlocConsumer<AuthBloc, AuthState>(
+        : BlocConsumer<AuthCubit, AuthState>(
             listener: (context, state) {
               // TODO: implement listener
             },
             builder: (context, state) {
-              if (state.status == AuthStatus.authenticated) return HomeScreen();
+              if (state is AuthLoggedIn) return HomeScreen();
               return OnBoardingScreen();
             },
           );
