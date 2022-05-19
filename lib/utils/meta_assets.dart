@@ -5,4 +5,18 @@ class MetaAssets {
   static const signUpIllustration = 'assets/animations/sign_up.json';
   static const otpIllustration = 'assets/animations/otp.json';
   static const String otpIcon = 'assets/otp_icon.png';
+
+  //profileIcons
+  static const String aboutUsIcon = 'assets/about_us.png';
+  static const String rateUsIcon = 'assets/rate_us.png';
+  static const String privacyPolicyIcon = 'assets/privacy_policy.png';
+  static const String feedbackIcon = 'assets/feedback.png';
+  static const String dummyProfile = 'assets/dummy_profile.png';
+  static const String submitContestRequest =
+      'assets/submit_contest_request.png';
+  static const String audioSettingsIcon = 'assets/audio_settings.png';
+  static const String copyrightIcon = 'assets/copyright.png';
+  static const String appearanceIcon = 'assets/appearance.png';
+  static const String notificationIcon = 'assets/notifications.png';
+  static const String profileArrowRight = 'assets/profile_arrow_right.png';
 }

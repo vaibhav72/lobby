@@ -65,6 +65,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Row(
       children: [
         Expanded(
+        
           child: Padding(
             padding: const EdgeInsets.all(8.0).copyWith(top: 0),
             child: TextFormField(

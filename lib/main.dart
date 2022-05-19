@@ -10,6 +10,8 @@ import 'package:lobby/repository/category/category_repository.dart';
 import 'package:lobby/screens/auth_screens/onboarding_screen.dart';
 
 import 'package:lobby/screens/home_screens/home.dart';
+import 'package:lobby/screens/home_screens/settings.dart';
+import 'package:lobby/utils/meta_colors.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +41,14 @@ class MyApp extends StatelessWidget {
           title: 'Flutter Demo',
           theme: ThemeData(
             scaffoldBackgroundColor: Colors.white,
-            appBarTheme: AppBarTheme(color: Colors.white, elevation: 0),
+            appBarTheme: AppBarTheme(
+                centerTitle: true,
+                color: Colors.white,
+                elevation: 0,
+                titleTextStyle: TextStyle(
+                    color: MetaColors.textColor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600)),
             fontFamily: 'Poppins',
             primarySwatch: Colors.blue,
           ),
@@ -84,7 +93,7 @@ class _SplashScreenState extends State<SplashScreen> {
             },
             builder: (context, state) {
               if (state is AuthLoggedIn) return HomeScreen();
-              return OnBoardingScreen();
+              return Settings();
             },
           );
   }
