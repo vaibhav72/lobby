@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lobby/cubits/cubit/auth_cubit.dart';
 import 'package:lobby/utils/meta_assets.dart';
 import 'package:lobby/utils/meta_colors.dart';
 import 'package:lobby/utils/meta_styles.dart';
@@ -31,7 +32,9 @@ class _SettingsState extends State<Settings> {
                     ProfileOptionsTile(
                       title: 'Submit Contest Request',
                       asset: MetaAssets.submitContestRequest,
-                      onTap: () {},
+                      onTap: () {
+                        BlocProvider.of<AuthCubit>(context).signOut();
+                      },
                     ),
                     ProfileOptionsTile(
                       title: 'Audio Settings',

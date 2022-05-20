@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "627649695640-jkvjab0d3m9ocnmt7104pmnrrkfu87pj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ezigboe.lhobby",
+            "certificate_hash": "a92dbde01778ec540d06bc56a29a68b547cf682f"
+          }
+        },
+        {
           "client_id": "627649695640-3568cj3nr5juvmmu2f3kcao61brnlab1.apps.googleusercontent.com",
           "client_type": 3
         }

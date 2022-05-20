@@ -10,7 +10,10 @@ abstract class AuthState extends Equatable {
 
 class AuthInitial extends AuthState {}
 
-class AuthLoading extends AuthState {}
+class AuthLoading extends AuthState {
+  String message;
+  AuthLoading({this.message});
+}
 
 class AuthLoggedIn extends AuthState {
   const AuthLoggedIn(UserModel user) : super(user: user);
@@ -23,7 +26,10 @@ class AuthCodeSent extends AuthState {
   AuthCodeSent({this.phoneNumber, this.message, this.token});
 }
 
-class AuthNotRegistered extends AuthState {}
+class AuthNotRegistered extends AuthState {
+  User userCredentials;
+  AuthNotRegistered({this.userCredentials});
+}
 
 class AuthNotLoggedIn extends AuthState {}
 

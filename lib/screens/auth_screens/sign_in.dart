@@ -17,7 +17,8 @@ class SignInScreen extends StatefulWidget {
   _SignInScreenState createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignInScreenState extends State<SignInScreen>
+    with TickerProviderStateMixin {
   TextEditingController phoneNumberController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   @override
@@ -51,6 +52,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   buildButton(
                       title: "Log In",
                       handler: () {
+                        FocusScope.of(context).requestFocus(FocusNode());
                         if (_formKey.currentState.validate()) {
                           context.read<AuthCubit>().sendOtp(
                               '+91' + phoneNumberController.text.trim());
@@ -62,6 +64,8 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
         ));
   }
+
+ 
 
   phoneNumberField() {
     return Padding(
@@ -125,7 +129,7 @@ class _OTPScreenState extends State<OTPScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("SIgn In"),
+          title: Text("Sign In"),
         ),
         body: Container(
           child: Center(

@@ -19,4 +19,9 @@ class MetaAssets {
   static const String appearanceIcon = 'assets/appearance.png';
   static const String notificationIcon = 'assets/notifications.png';
   static const String profileArrowRight = 'assets/profile_arrow_right.png';
+  static const String searchIcon = 'assets/search_icon.png';
+  static const String postOptions = 'assets/post_options.png';
+  static const String leaderboardIcon = 'assets/leaderboard_icon.png';
+  static const String likeIcon = 'assets/like.png';
+  static const String uploadPostIcon = 'assets/upload_post_icon.png';
 }

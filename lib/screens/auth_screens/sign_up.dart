@@ -17,6 +17,7 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -50,9 +51,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   buildButton(
                       title: "Submit",
                       handler: () {
-                        // if (_formKey.currentState.validate()) {
-                        //   context.read<AuthCubit>().createUser(User(), email, name);
-                        // }
+                        if (_formKey.currentState.validate()) {
+                          context.read<AuthCubit>().createUser(
+                              (BlocProvider.of<AuthCubit>(context).state
+                                      as AuthNotRegistered)
+                                  .userCredentials,
+                              emailController.text,
+                              nameController.text);
+                        }
                       })
                 ],
               ),
@@ -65,12 +71,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Row(
       children: [
         Expanded(
-        
           child: Padding(
             padding: const EdgeInsets.all(8.0).copyWith(top: 0),
             child: TextFormField(
               onChanged: (value) {},
-              obscureText: true,
               decoration: MetaStyles.authInputDecoration(title: "Name"),
             ),
           ),
@@ -86,6 +90,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
+              controller: emailController,
               onChanged: (value) {},
               decoration: MetaStyles.authInputDecoration(title: "Email"),
             ),

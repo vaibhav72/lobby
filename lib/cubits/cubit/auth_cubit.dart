@@ -12,29 +12,36 @@ class AuthCubit extends Cubit<AuthState> {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   AuthCubit() : super(AuthInitial()) {
-    _userSubscription = user.listen((user) async {
-      if (user != null) {
-        _userModelSubscription =
-            UserModel.collection.doc(user.uid).snapshots().map((data) {
-          print("the data is                     ${data.exists}");
-          if (data.exists) {
-            return UserModel.fromMap(data)?.copyWith(
-                documentReference: UserModel.collection.doc(user.uid));
-          } else {
-            return null;
-          }
-        }).listen((userModel) {
-          if (userModel != null) {
-            print("hereeeeeee");
-            userModel = userModel.copyWith(user: user);
-            emit(AuthLoggedIn(userModel));
-          }
-          emit(AuthNotRegistered());
-        });
-      } else {
-        emit(AuthNotLoggedIn());
-      }
-    });
+    try {
+      _userSubscription = user.listen((user) async {
+        emit(AuthLoading());
+        if (user != null) {
+          _userModelSubscription =
+              UserModel.collection.doc(user.uid).snapshots().map((data) {
+            if (data.exists) {
+              return UserModel.fromMap(data)?.copyWith(
+                  documentReference: UserModel.collection.doc(user.uid));
+            } else {
+              return null;
+            }
+          }).listen((userModel) {
+            if (userModel != null) {
+              log('User existing');
+              userModel = userModel.copyWith(user: user);
+              emit(AuthLoggedIn(userModel));
+            } else {
+              emit(AuthNotRegistered(userCredentials: user));
+            }
+          });
+        } else {
+          emit(AuthNotLoggedIn());
+        }
+      });
+    } on FirebaseAuthException catch (e) {
+      emit(AuthError(message: e.message));
+    } on Exception catch (e) {
+      emit(AuthError(message: e.toString()));
+    }
   }
 
   StreamSubscription<UserModel> _userModelSubscription;
@@ -44,6 +51,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   sendOtp(String phoneNumber) async {
     try {
+      emit(AuthLoading(message: 'Sending OTP'));
       await _firebaseAuth.verifyPhoneNumber(
           phoneNumber: phoneNumber,
           verificationCompleted: (PhoneAuthCredential credentials) {
@@ -55,7 +63,9 @@ class AuthCubit extends Cubit<AuthState> {
           codeSent: (String verificationId, [int forceResendingToken]) {
             _verificationId = verificationId;
             emit(AuthCodeSent(
-                phoneNumber: phoneNumber, token: forceResendingToken));
+                phoneNumber: phoneNumber,
+                token: forceResendingToken,
+                message: 'Code sent'));
           },
           codeAutoRetrievalTimeout: (String verificationId) {
             _verificationId = verificationId;
@@ -68,6 +78,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void verifyOTP(String otp) {
+    emit(AuthLoading(message: 'Verifying OTP'));
     try {
       log('heree');
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
@@ -76,6 +87,11 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       emit(AuthError(message: e.toString()));
     }
+  }
+
+  void signOut() async {
+    emit(AuthLoading(message: 'Signing out'));
+    await _firebaseAuth.signOut();
   }
 
   signInWithCredentials(PhoneAuthCredential credential) async {
@@ -102,8 +118,10 @@ class AuthCubit extends Cubit<AuthState> {
             balance: 0,
             isAdmin: false,
           ).toFirestore());
+    } on FirebaseAuthException catch (e) {
+      emit(AuthError(message: e.message));
     } catch (_) {
-      print(_.toString());
+      emit(AuthError(message: _.toString()));
     }
   }
 }

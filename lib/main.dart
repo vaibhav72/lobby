@@ -7,7 +7,9 @@ import 'package:lobby/cubits/cubit/auth_cubit.dart';
 import 'package:lobby/cubits/navigation/navigation_cubit.dart';
 
 import 'package:lobby/repository/category/category_repository.dart';
+import 'package:lobby/screens/auth_screens/helpers/auth_widgets.dart';
 import 'package:lobby/screens/auth_screens/onboarding_screen.dart';
+import 'package:lobby/screens/auth_screens/sign_in.dart';
 
 import 'package:lobby/screens/home_screens/home.dart';
 import 'package:lobby/screens/home_screens/settings.dart';
@@ -93,7 +95,9 @@ class _SplashScreenState extends State<SplashScreen> {
             },
             builder: (context, state) {
               if (state is AuthLoggedIn) return HomeScreen();
-              return Settings();
+              // if (state is AuthLoading) return Loader(message: state.message);
+              if (state is AuthInitial) return Loader();
+              return OnBoardingScreen();
             },
           );
   }
