@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:lobby/bloc/category/category_bloc.dart';
+import 'package:lobby/cubits/cubit/auth_cubit.dart';
 import 'package:lobby/cubits/navigation/navigation_cubit.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,81 +14,187 @@ import 'package:lobby/screens/home_screens/settings.dart';
 import 'package:lobby/screens/home_screens/view_all_posts.dart';
 import 'package:lobby/utils/meta_assets.dart';
 import 'package:lobby/utils/meta_colors.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key key}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
-  List widgetsList = [ViewAllPosts(), CategoryContestList(), Settings()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      child: Column(
-        children: [
-          Padding(padding: MediaQuery.of(context).padding),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        drawer: Settings(),
+        body: Builder(builder: (context) {
+          return Container(
+            child: Column(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Settings()));
-                  },
+                Padding(padding: MediaQuery.of(context).padding),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Image(
-                        image: AssetImage(
-                          MetaAssets.dummyProfile,
+                      GestureDetector(
+                        onTap: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                        child: Row(
+                          children: [
+                            Image(
+                              image: AssetImage(
+                                MetaAssets.dummyProfile,
+                              ),
+                              height: MediaQuery.of(context).size.height * .05,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Welcome",
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                BlocBuilder<AuthCubit, AuthState>(
+                                  builder: (context, state) {
+                                    if (state is AuthLoggedIn) {
+                                      return Text(
+                                        state.user!.name,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      );
+                                    } else {
+                                      return Shimmer.fromColors(
+                                        period: Duration(milliseconds: 100),
+                                        enabled: true,
+                                        baseColor: Colors.white,
+                                        highlightColor:
+                                            MetaColors.postShadowColor,
+                                        child: Container(
+                                          height: 20,
+                                          width: 100,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                )
+                              ],
+                            )
+                          ],
                         ),
-                        height: MediaQuery.of(context).size.height * .05,
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Welcome",
-                            style: TextStyle(fontSize: 10),
+                      Row(
+                        children: const [
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child:
+                                Image(image: AssetImage(MetaAssets.searchIcon)),
                           ),
-                          Text(
-                            'Tony Stark',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500),
-                          )
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Image(
+                                image: AssetImage(MetaAssets.notificationIcon)),
+                          ),
                         ],
                       )
                     ],
                   ),
                 ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image(image: AssetImage(MetaAssets.searchIcon)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child:
-                          Image(image: AssetImage(MetaAssets.notificationIcon)),
-                    ),
-                  ],
-                )
+                Container(
+                  // decoration: BoxDecoration(boxShadow: [
+                  //   BoxShadow(color: MetaColors.categoryShadow, blurRadius: 5)
+                  // ]),
+                  height: MediaQuery.of(context).size.height * .1,
+                  width: MediaQuery.of(context).size.width,
+                  child: BlocBuilder<CategoryBloc, CategoryState>(
+                    buildWhen: (previous, current) => previous != current,
+                    builder: (context, state) {
+                      if (state is CategoryLoaded)
+                        // ignore: curly_braces_in_flow_control_structures
+                        return ListView.builder(
+                            // padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: state.categoryList!.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ViewCategoryPosts(
+                                                  category: state
+                                                      .categoryList![index],
+                                                )));
+                                  },
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          .45,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color:
+                                                    MetaColors.categoryShadow,
+                                                offset: Offset(0, 3),
+                                                blurRadius: 25)
+                                          ],
+                                          image: DecorationImage(
+                                              fit: BoxFit.fill,
+                                              image: NetworkImage(state
+                                                  .categoryList![index]
+                                                  .categoryImage))),
+                                      child: BackdropFilter(
+                                          filter: ImageFilter.blur(
+                                              sigmaX: 2, sigmaY: 2),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Center(
+                                              child: Text(
+                                                state.categoryList![index]
+                                                    .categoryName,
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ),
+                                          )),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            });
+                      if (state is CategoryLoading) {
+                        return CircularProgressIndicator();
+                      }
+                      return SizedBox.shrink();
+                    },
+                  ),
+                ),
+                Expanded(
+                    child: Container(
+                        decoration: BoxDecoration(boxShadow: [
+                          BoxShadow(
+                              color: MetaColors.postShadowColor, blurRadius: 25)
+                        ]),
+                        child: ViewAllPosts())),
               ],
             ),
-          ),
-          Expanded(child: ViewAllPosts()),
-        ],
-      ),
-    ));
+          );
+        }));
   }
 }

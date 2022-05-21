@@ -13,7 +13,7 @@ enum VideoType {
 
 class CustomVideoPlayer extends StatefulWidget {
   const CustomVideoPlayer({
-    @required this.path,
+    required this.path,
     this.videoType = VideoType.network,
     this.width,
     this.height,
@@ -27,9 +27,9 @@ class CustomVideoPlayer extends StatefulWidget {
 
   final String path;
   final VideoType videoType;
-  final double width;
-  final double height;
-  final double aspectRatio;
+  final double? width;
+  final double? height;
+  final double? aspectRatio;
   final bool autoPlay;
   final bool looping;
   final bool showControls;
@@ -41,8 +41,8 @@ class CustomVideoPlayer extends StatefulWidget {
 }
 
 class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
-  VideoPlayerController _videoPlayerController;
-  ChewieController _chewieController;
+  VideoPlayerController? _videoPlayerController;
+  ChewieController? _chewieController;
 
   @override
   void initState() {
@@ -52,18 +52,19 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
 
   @override
   void dispose() {
-    _videoPlayerController.dispose();
-    _chewieController.dispose();
+    _videoPlayerController!.dispose();
+    _chewieController!.dispose();
     super.dispose();
   }
 
-  double get width => widget.width == null || widget.width >= double.infinity
+  double? get width => widget.width == null || widget.width! >= double.infinity
       ? MediaQuery.of(context).size.width
       : widget.width;
 
-  double get height => widget.height == null || widget.height >= double.infinity
-      ? (width != null ? width / aspectRatio : null)
-      : widget.height;
+  double? get height =>
+      widget.height == null || widget.height! >= double.infinity
+          ? (width != null ? width! / aspectRatio : null)
+          : widget.height;
 
   double get aspectRatio =>
       _chewieController?.videoPlayerController?.value?.aspectRatio ??
@@ -73,9 +74,9 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
     _videoPlayerController = widget.videoType == VideoType.network
         ? VideoPlayerController.network(widget.path)
         : VideoPlayerController.asset(widget.path);
-    await _videoPlayerController.initialize();
+    await _videoPlayerController!.initialize();
     _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
+      videoPlayerController: _videoPlayerController!,
       deviceOrientationsOnEnterFullScreen: [
         DeviceOrientation.landscapeLeft,
         DeviceOrientation.landscapeRight,
@@ -98,8 +99,8 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
           height: height,
           width: width,
           child: _chewieController != null &&
-                  _chewieController.videoPlayerController.value.isInitialized
-              ? Chewie(controller: _chewieController)
+                  _chewieController!.videoPlayerController.value.isInitialized
+              ? Chewie(controller: _chewieController!)
               : Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [

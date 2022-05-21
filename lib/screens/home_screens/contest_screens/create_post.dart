@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 
 class PostCreateWidget extends StatefulWidget {
   CategoryModel categoryModel;
-  PostCreateWidget({Key key, this.categoryModel}) : super(key: key);
+  PostCreateWidget({Key? key, required this.categoryModel}) : super(key: key);
 
   @override
   _PostCreateWidgetState createState() => _PostCreateWidgetState();
@@ -34,7 +34,7 @@ class _PostCreateWidgetState extends State<PostCreateWidget>
   TextEditingController textController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
-  SelectedMedia selectedMedia;
+  SelectedMedia? selectedMedia;
 
   @override
   void initState() {
@@ -59,7 +59,7 @@ class _PostCreateWidgetState extends State<PostCreateWidget>
             }
             if (state is CreatePostError) {
               ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(state.message)));
+                  .showSnackBar(SnackBar(content: Text(state.message!)));
             }
           },
           builder: (context, state) {
@@ -91,9 +91,9 @@ class _PostCreateWidgetState extends State<PostCreateWidget>
                         );
                         if (selectedMedia != null &&
                             validateFileFormat(
-                                selectedMedia.storagePath, context)) {
+                                selectedMedia!.storagePath, context)) {
                           setState(() {
-                            uploadedFileUrl1 = selectedMedia.localPath;
+                            uploadedFileUrl1 = selectedMedia!.localPath;
                           });
 
                           // final downloadUrl = await uploadData(
@@ -124,14 +124,19 @@ class _PostCreateWidgetState extends State<PostCreateWidget>
                           ),
                           imageBuilder: (path) => ClipRRect(
                             borderRadius: BorderRadius.circular(16),
-                            child: Image(
-                              image: uploadedFileUrl1.trim().isNotEmpty
-                                  ? FileImage(File(path))
-                                  : AssetImage(path),
-                              width: 300,
-                              height: 300,
-                              fit: BoxFit.cover,
-                            ),
+                            child: uploadedFileUrl1.trim().isNotEmpty
+                                ? Image(
+                                    image: FileImage(File(path)),
+                                    width: 300,
+                                    height: 300,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image(
+                                    image: AssetImage(path),
+                                    width: 300,
+                                    height: 300,
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
                           videoPlayerBuilder: (path) => CustomVideoPlayer(
                             path: path,
@@ -199,17 +204,17 @@ class _PostCreateWidgetState extends State<PostCreateWidget>
                             currentUserImage:
                                 BlocProvider.of<AuthCubit>(context)
                                     .state
-                                    .user
-                                    .displayImageUrl,
+                                    .user!
+                                    .displayImageUrl!,
                             postUserName: BlocProvider.of<AuthCubit>(context)
                                 .state
-                                .user
-                                .user
-                                .displayName,
+                                .user!
+                                .user!
+                                .displayName!,
                             currentUserRef: FirebaseFirestore.instance
                                 .collection('users')
-                                .doc(FirebaseAuth.instance.currentUser.uid),
-                            media: selectedMedia);
+                                .doc(FirebaseAuth.instance.currentUser!.uid),
+                            media: selectedMedia!);
                       } else
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Please select an image")));

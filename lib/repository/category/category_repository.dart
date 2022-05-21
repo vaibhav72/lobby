@@ -4,7 +4,7 @@ import 'package:lobby/repository/category/base_category_repository.dart';
 
 class CategoryRepository extends BaseCategoryRepository {
   final FirebaseFirestore _firebaseFirestore;
-  CategoryRepository({FirebaseFirestore firebaseFirestore})
+  CategoryRepository({FirebaseFirestore? firebaseFirestore})
       : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
   @override
   // TODO: implement categoryList

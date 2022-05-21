@@ -8,7 +8,7 @@ import 'package:lobby/screens/auth_screens/sign_in.dart';
 import 'package:lobby/screens/auth_screens/sign_up.dart';
 
 class OnBoardingScreen extends StatefulWidget {
-  const OnBoardingScreen({Key key}) : super(key: key);
+  const OnBoardingScreen({Key? key}) : super(key: key);
 
   @override
   _OnBoardingScreenState createState() => _OnBoardingScreenState();
@@ -21,6 +21,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     return Scaffold(
       body: BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
         if (state is AuthError) {
+          log('here');
           ScaffoldMessenger.of(context)
               .showSnackBar(banner(context, state.message, isError: true));
         }
@@ -30,6 +31,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         }
         if (state is AuthCodeSent) {
           print("here");
+          // Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(banner(
             context,
             state.message,
@@ -38,23 +40,30 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               duration: Duration(seconds: 1), curve: Curves.bounceOut);
         }
 
+        if (state is AuthNotLoggedIn || state is AuthInitial)
+          pageController.animateToPage(0,
+              duration: Duration(seconds: 1), curve: Curves.bounceOut);
+
         // TODO: implement listener
       }, builder: (context, state) {
-        log(state.toString());
-
-        return PageView(
-          physics: NeverScrollableScrollPhysics(),
-          controller: pageController,
+        return Stack(
           children: [
-            SignInScreen(
-              pageController: pageController,
+            PageView(
+              physics: NeverScrollableScrollPhysics(),
+              controller: pageController,
+              children: [
+                SignInScreen(
+                  pageController: pageController,
+                ),
+                OTPScreen(
+                  pageController: pageController,
+                ),
+                SignUpScreen(
+                  pageController: pageController,
+                ),
+              ],
             ),
-            OTPScreen(
-              pageController: pageController,
-            ),
-            SignUpScreen(
-              pageController: pageController,
-            ),
+            if (state is AuthLoading) Loader(message: state.message),
           ],
         );
       }),

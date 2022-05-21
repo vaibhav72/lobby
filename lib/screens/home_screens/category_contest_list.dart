@@ -8,7 +8,7 @@ import 'package:lobby/repository/post/post_repository.dart';
 import 'package:lobby/screens/home_screens/contest_screens/view_contest_participants.dart';
 
 class CategoryContestList extends StatefulWidget {
-  const CategoryContestList({Key key}) : super(key: key);
+  const CategoryContestList({Key? key}) : super(key: key);
 
   @override
   _CategoryContestListState createState() => _CategoryContestListState();
@@ -27,7 +27,7 @@ class _CategoryContestListState extends State<CategoryContestList> {
                 // ignore: curly_braces_in_flow_control_structures
                 return ListView.builder(
                     shrinkWrap: true,
-                    itemCount: state?.categoryList?.length,
+                    itemCount: state.categoryList?.length,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -37,7 +37,7 @@ class _CategoryContestListState extends State<CategoryContestList> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ViewCategoryPosts(
-                                          category: state?.categoryList[index],
+                                          category: state.categoryList![index],
                                         )));
                           },
                           child: ClipRRect(
@@ -49,7 +49,7 @@ class _CategoryContestListState extends State<CategoryContestList> {
                                   image: DecorationImage(
                                       fit: BoxFit.fill,
                                       image: NetworkImage(state
-                                          ?.categoryList[index]
+                                          .categoryList![index]
                                           .categoryImage))),
                               child: BackdropFilter(
                                   filter:
@@ -57,7 +57,7 @@ class _CategoryContestListState extends State<CategoryContestList> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(state
-                                        ?.categoryList[index].categoryName),
+                                        .categoryList![index].categoryName),
                                   )),
                             ),
                           ),

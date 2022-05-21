@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,7 +24,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,39 +32,20 @@ class MyApp extends StatelessWidget {
       providers: [
         RepositoryProvider(create: (context) => CategoryRepository())
       ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (context) => AuthCubit()),
-          BlocProvider(create: (context) => NavigationCubit()),
-          BlocProvider(
-              create: (context) => CategoryBloc(
-                  categoryRepository: context.read<CategoryRepository>())
-                ..add(LoadCategories()))
-        ],
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            scaffoldBackgroundColor: Colors.white,
-            appBarTheme: AppBarTheme(
-                centerTitle: true,
-                color: Colors.white,
-                elevation: 0,
-                titleTextStyle: TextStyle(
-                    color: MetaColors.textColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600)),
-            fontFamily: 'Poppins',
-            primarySwatch: Colors.blue,
-          ),
-          home: const SplashScreen(),
-        ),
-      ),
+      child: MultiBlocProvider(providers: [
+        BlocProvider(create: (context) => AuthCubit()),
+        BlocProvider(create: (context) => NavigationCubit()),
+        BlocProvider(
+            create: (context) => CategoryBloc(
+                categoryRepository: context.read<CategoryRepository>())
+              ..add(LoadCategories()))
+      ], child: SplashScreen()),
     );
   }
 }
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key key}) : super(key: key);
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -82,10 +65,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return showLogo
-        ? Scaffold(
-            body: Container(
-              child: Center(
-                child: Text("Lhobby"),
+        ? MaterialApp(
+            home: Scaffold(
+              body: Container(
+                child: Center(
+                  child: Text("Lhobby"),
+                ),
               ),
             ),
           )
@@ -94,10 +79,43 @@ class _SplashScreenState extends State<SplashScreen> {
               // TODO: implement listener
             },
             builder: (context, state) {
-              if (state is AuthLoggedIn) return HomeScreen();
+              // print(state);
+              log('building main builder');
+              if (state is AuthLoggedIn) {
+                return MaterialApp(
+                    theme: ThemeData(
+                      scaffoldBackgroundColor: Colors.white,
+                      appBarTheme: AppBarTheme(
+                          centerTitle: true,
+                          color: Colors.white,
+                          elevation: 0,
+                          titleTextStyle: TextStyle(
+                              color: MetaColors.textColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600)),
+                      fontFamily: 'Poppins',
+                      primarySwatch: Colors.blue,
+                    ),
+                    home: HomeScreen());
+              }
               // if (state is AuthLoading) return Loader(message: state.message);
-              if (state is AuthInitial) return Loader();
-              return OnBoardingScreen();
+              else {
+                return MaterialApp(
+                    theme: ThemeData(
+                      scaffoldBackgroundColor: Colors.white,
+                      appBarTheme: AppBarTheme(
+                          centerTitle: true,
+                          color: Colors.white,
+                          elevation: 0,
+                          titleTextStyle: TextStyle(
+                              color: MetaColors.textColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600)),
+                      fontFamily: 'Poppins',
+                      primarySwatch: Colors.blue,
+                    ),
+                    home: OnBoardingScreen());
+              }
             },
           );
   }

@@ -3,12 +3,12 @@ import 'package:lobby/utils/meta_colors.dart';
 
 class MetaStyles {
   static authInputDecoration({
-    String title,
+    String? title,
   }) =>
       InputDecoration(
           contentPadding: EdgeInsets.only(bottom: 12, left: 0),
           label: Text(
-            title,
+            title!,
             style: TextStyle(
                 color: MetaColors.subTextColor.withOpacity(0.5), fontSize: 16),
           ),

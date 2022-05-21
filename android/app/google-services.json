@@ -7,18 +7,26 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:627649695640:android:6ea5aef9fbf4222149e5ed",
+        "mobilesdk_app_id": "1:627649695640:android:437c28d84051546b49e5ed",
         "android_client_info": {
           "package_name": "com.ezigboe.lhobby"
         }
       },
       "oauth_client": [
         {
-          "client_id": "627649695640-hidt9s2ahbocteri5kqq2f4vslj33u4r.apps.googleusercontent.com",
+          "client_id": "627649695640-bn8e3ipudqeuabqr0244bavmo3to589k.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.ezigboe.lhobby",
-            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+            "certificate_hash": "3fcd753c833cbb82586d1f7c3d7dfdddbc8c84b6"
+          }
+        },
+        {
+          "client_id": "627649695640-gn7ani90q297hqfhrqk4lao965m329tg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ezigboe.lhobby",
+            "certificate_hash": "91a133084c803a2ca20c8eaf340265267ca8be0d"
           }
         },
         {

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,80 +8,94 @@ import 'package:lobby/cubits/cubit/auth_cubit.dart';
 
 import 'package:lobby/cubits/posts/posts_cubit.dart';
 import 'package:lobby/models/post_model.dart';
-import 'package:lobby/screens/home_screens/contest_screens/post_details_widget.dart';
 import 'package:lobby/utils/meta_assets.dart';
 import 'package:lobby/utils/meta_colors.dart';
 
-class PostTile extends StatelessWidget {
-  const PostTile({Key? key, required this.post}) : super(key: key);
+class FullScreenImage extends StatefulWidget {
+  final PostModel post;
+  const FullScreenImage({Key? key, required this.post}) : super(key: key);
+
+  @override
+  State<FullScreenImage> createState() => _FullScreenImageState();
+}
+
+class _FullScreenImageState extends State<FullScreenImage> {
+  bool showDetails = true;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Scaffold(
+          body: GestureDetector(
+        onTap: () {
+          setState(() {
+            showDetails = !showDetails;
+          });
+        },
+        child: Container(
+          height: double.maxFinite,
+          width: double.maxFinite,
+          child: Stack(
+            children: [
+              Image(
+                image: CachedNetworkImageProvider(widget.post.postImage),
+                fit: BoxFit.fill,
+                height: double.maxFinite,
+              ),
+              Padding(
+                padding: MediaQuery.of(context).padding,
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.close,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              ),
+              // if (showDetails)
+
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: AnimatedScale(
+                    curve: Curves.bounceOut,
+                    scale: showDetails ? 1 : 0,
+                    duration: Duration(milliseconds: 500),
+                    child: PostDetailsWidget(post: widget.post)),
+              ),
+            ],
+          ),
+        ),
+      )),
+    );
+  }
+}
+
+class PostDetailsWidget extends StatelessWidget {
+  const PostDetailsWidget({Key? key, required this.post}) : super(key: key);
   final PostModel post;
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.all(8.0),
       child: Container(
+        width: double.maxFinite,
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
                   color: MetaColors.postShadowColor,
-                  blurRadius: 25,
+                  blurRadius: 50,
                   spreadRadius: 8,
                   offset: Offset(0, 3))
             ]),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Icon(Icons.camera),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Photography",
-                            style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w500),
-                          ),
-                          Text(
-                            "By tevd",
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.w300),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Icon(Icons.arrow_forward_ios)
-                ],
-              ),
-            ),
-            post.postImage != null && post.postImage.isNotEmpty
-                ? InkWell(
-                    splashColor: MetaColors.gradientColorOne,
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  FullScreenImage(post: post)));
-                    },
-                    child: CachedNetworkImage(
-                      height: 200,
-                      width: double.infinity,
-                      imageUrl: post.postImage,
-                      fit: BoxFit.fill,
-                    ),
-                  )
-                : Text(''),
-            SizedBox(
-              height: 10,
-            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -215,14 +231,6 @@ class PostTile extends StatelessWidget {
                 ],
               ),
             ),
-            // if (post.postCreated != null)
-            //   Align(
-            //       alignment: Alignment.centerLeft,
-            //       child: Padding(
-            //         padding: const EdgeInsets.all(8.0),
-            //         child: Text(DateFormat('MMM dd, yyyy | hh:mm a')
-            //             .format(post.postCreated)),
-            //       )),
           ],
         ),
       ),

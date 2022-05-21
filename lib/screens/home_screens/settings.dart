@@ -5,9 +5,10 @@ import 'package:lobby/cubits/cubit/auth_cubit.dart';
 import 'package:lobby/utils/meta_assets.dart';
 import 'package:lobby/utils/meta_colors.dart';
 import 'package:lobby/utils/meta_styles.dart';
+import 'package:shimmer/shimmer.dart';
 
 class Settings extends StatefulWidget {
-  const Settings({Key key}) : super(key: key);
+  const Settings({Key? key}) : super(key: key);
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -96,10 +97,10 @@ class _SettingsState extends State<Settings> {
 
 class ProfileOptionsTile extends StatelessWidget {
   const ProfileOptionsTile({
-    this.asset,
-    this.onTap,
-    this.title,
-    Key key,
+    required this.asset,
+    required this.onTap,
+    required this.title,
+    Key? key,
   }) : super(key: key);
   final String title;
   final String asset;
@@ -132,7 +133,7 @@ class ProfileOptionsTile extends StatelessWidget {
 
 class ProfileTIleWidget extends StatelessWidget {
   const ProfileTIleWidget({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -157,28 +158,45 @@ class ProfileTIleWidget extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Welcome",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 8),
+                    BlocBuilder<AuthCubit, AuthState>(
+                      builder: (context, state) {
+                        if (state is AuthLoggedIn) {
+                          return Expanded(
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Welcome",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 8),
+                                  ),
+                                  Text(
+                                    state.user!.name,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  Text(
+                                    state.user!.email,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 10),
+                                  )
+                                ]),
+                          );
+                        } else {
+                          return Shimmer.fromColors(
+                            period: Duration(milliseconds: 100),
+                            enabled: true,
+                            baseColor: Colors.white,
+                            highlightColor: MetaColors.postShadowColor,
+                            child: Container(
+                              height: 20,
+                              width: 100,
                             ),
-                            Text(
-                              "Tony Stark",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              "tevdmarre@ezigboe.com",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 10),
-                            )
-                          ]),
+                          );
+                        }
+                      },
                     ),
                     Padding(
                       padding: const EdgeInsets.only(right: 12),

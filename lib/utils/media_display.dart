@@ -8,9 +8,9 @@ bool _isVideoPath(String path) =>
 
 class MediaDisplay extends StatelessWidget {
   const MediaDisplay({
-    @required this.path,
-    @required this.imageBuilder,
-    @required this.videoPlayerBuilder,
+    required this.path,
+    required this.imageBuilder,
+    required this.videoPlayerBuilder,
     this.width,
     this.height,
   });
@@ -18,8 +18,8 @@ class MediaDisplay extends StatelessWidget {
   final String path;
   final Widget Function(String) imageBuilder;
   final Widget Function(String) videoPlayerBuilder;
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
 
   @override
   Widget build(BuildContext context) =>

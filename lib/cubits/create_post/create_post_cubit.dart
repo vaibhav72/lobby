@@ -13,17 +13,17 @@ class CreatePostCubit extends Cubit<CreatePostState> {
   final PostRepository _postRepository;
   final CategoryModel categoryModel;
   CreatePostCubit(
-      {@required PostRepository postRepository, @required this.categoryModel})
+      {required PostRepository? postRepository, required this.categoryModel})
       : _postRepository = postRepository ?? PostRepository(),
         super(CreatePostLoading());
 
   addPost(
-      {@required String title,
-      @required String description,
-      @required String currentUserImage,
-      @required DocumentReference currentUserRef,
-      @required String postUserName,
-      @required SelectedMedia media}) async {
+      {required String title,
+      required String description,
+      required String currentUserImage,
+      required DocumentReference currentUserRef,
+      required String postUserName,
+      required SelectedMedia media}) async {
     try {
       emit(CreatePostLoading());
       String url =

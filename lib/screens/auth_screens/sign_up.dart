@@ -9,7 +9,8 @@ import 'package:lottie/lottie.dart';
 
 class SignUpScreen extends StatefulWidget {
   final PageController pageController;
-  const SignUpScreen({Key key, this.pageController}) : super(key: key);
+  const SignUpScreen({Key? key, required this.pageController})
+      : super(key: key);
 
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
@@ -51,13 +52,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   buildButton(
                       title: "Submit",
                       handler: () {
-                        if (_formKey.currentState.validate()) {
-                          context.read<AuthCubit>().createUser(
-                              (BlocProvider.of<AuthCubit>(context).state
-                                      as AuthNotRegistered)
-                                  .userCredentials,
-                              emailController.text,
-                              nameController.text);
+                        if (_formKey.currentState!.validate()) {
+                          if (BlocProvider.of<AuthCubit>(context).state
+                                  is AuthNotRegistered ||
+                              BlocProvider.of<AuthCubit>(context).state
+                                  is AuthError) {
+                            context.read<AuthCubit>().createUser(
+                                BlocProvider.of<AuthCubit>(context)
+                                    .state
+                                    .userCredentials!,
+                                emailController.text,
+                                nameController.text);
+                          }
                         }
                       })
                 ],

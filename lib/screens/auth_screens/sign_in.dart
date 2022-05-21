@@ -11,7 +11,8 @@ import 'package:lottie/lottie.dart';
 
 class SignInScreen extends StatefulWidget {
   final PageController pageController;
-  const SignInScreen({Key key, this.pageController}) : super(key: key);
+  const SignInScreen({Key? key, required this.pageController})
+      : super(key: key);
 
   @override
   _SignInScreenState createState() => _SignInScreenState();
@@ -53,7 +54,7 @@ class _SignInScreenState extends State<SignInScreen>
                       title: "Log In",
                       handler: () {
                         FocusScope.of(context).requestFocus(FocusNode());
-                        if (_formKey.currentState.validate()) {
+                        if (_formKey.currentState!.validate()) {
                           context.read<AuthCubit>().sendOtp(
                               '+91' + phoneNumberController.text.trim());
                         }
@@ -64,8 +65,6 @@ class _SignInScreenState extends State<SignInScreen>
           ),
         ));
   }
-
- 
 
   phoneNumberField() {
     return Padding(
@@ -95,7 +94,7 @@ class _SignInScreenState extends State<SignInScreen>
                 ],
                 cursorColor: MetaColors.textColor,
                 validator: (value) {
-                  if (value.trim().isEmpty) {
+                  if (value!.trim().isEmpty) {
                     return "Phone number cannot be empty";
                   } else if (value.trim().length != 10) {
                     return "Phone number must be of 10 digits";
@@ -116,7 +115,7 @@ class _SignInScreenState extends State<SignInScreen>
 
 class OTPScreen extends StatefulWidget {
   final PageController pageController;
-  const OTPScreen({Key key, this.pageController}) : super(key: key);
+  const OTPScreen({Key? key, required this.pageController}) : super(key: key);
 
   @override
   _OTPScreenState createState() => _OTPScreenState();
@@ -155,7 +154,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   buildButton(
                       title: "Submit",
                       handler: () {
-                        if (_formKey.currentState.validate()) {
+                        if (_formKey.currentState!.validate()) {
                           context
                               .read<AuthCubit>()
                               .verifyOTP(otpController.text);
@@ -192,7 +191,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 LengthLimitingTextInputFormatter(6)
               ],
               validator: (value) {
-                if (value.trim().isEmpty) {
+                if (value!.trim().isEmpty) {
                   return "OTP cannot be empty";
                 } else if (value.trim().length != 6) {
                   return "OTP must be of 6 digits";

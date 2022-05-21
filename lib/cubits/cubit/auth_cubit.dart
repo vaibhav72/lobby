@@ -11,7 +11,7 @@ part 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  AuthCubit() : super(AuthInitial()) {
+  AuthCubit() : super(AuthLoading()) {
     try {
       _userSubscription = user.listen((user) async {
         emit(AuthLoading());
@@ -19,7 +19,7 @@ class AuthCubit extends Cubit<AuthState> {
           _userModelSubscription =
               UserModel.collection.doc(user.uid).snapshots().map((data) {
             if (data.exists) {
-              return UserModel.fromMap(data)?.copyWith(
+              return UserModel.fromMap(data).copyWith(
                   documentReference: UserModel.collection.doc(user.uid));
             } else {
               return null;
@@ -27,8 +27,16 @@ class AuthCubit extends Cubit<AuthState> {
           }).listen((userModel) {
             if (userModel != null) {
               log('User existing');
-              userModel = userModel.copyWith(user: user);
-              emit(AuthLoggedIn(userModel));
+              if (state.user == userModel) print("data didnt change");
+              log(userModel.name);
+              UserModel newUserModel = userModel.copyWith(user: user);
+              if (state is AuthLoggedIn) {
+                log('User already logged in');
+
+                emit(state.copyWith(user: newUserModel));
+              } else {
+                emit(AuthLoggedIn(newUserModel));
+              }
             } else {
               emit(AuthNotRegistered(userCredentials: user));
             }
@@ -44,10 +52,10 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  StreamSubscription<UserModel> _userModelSubscription;
-  StreamSubscription<User> _userSubscription;
-  Stream<User> get user => _firebaseAuth.userChanges();
-  String _verificationId;
+  late StreamSubscription<UserModel?> _userModelSubscription;
+  late StreamSubscription<User?> _userSubscription;
+  Stream<User?> get user => _firebaseAuth.userChanges();
+  late String _verificationId;
 
   sendOtp(String phoneNumber) async {
     try {
@@ -58,9 +66,9 @@ class AuthCubit extends Cubit<AuthState> {
             signInWithCredentials(credentials);
           },
           verificationFailed: (FirebaseAuthException e) {
-            throw (e);
+            emit(AuthError(message: e.message));
           },
-          codeSent: (String verificationId, [int forceResendingToken]) {
+          codeSent: (String verificationId, int? forceResendingToken) {
             _verificationId = verificationId;
             emit(AuthCodeSent(
                 phoneNumber: phoneNumber,
@@ -71,8 +79,10 @@ class AuthCubit extends Cubit<AuthState> {
             _verificationId = verificationId;
           });
     } on FirebaseAuthException catch (e) {
+      log(' firebase error');
       emit(AuthError(message: e.message));
     } catch (e) {
+      log('error');
       emit(AuthError(message: e.toString()));
     }
   }
@@ -106,12 +116,17 @@ class AuthCubit extends Cubit<AuthState> {
   createUser(User user, String email, String name) async {
     // TODO: implement createUser
     try {
-      user.updateEmail(email);
+      // user.updateEmail(email).catchError((e) {
+      //   log(e.toString());
+      //   emit(
+      //     AuthError(message: e.toString(), userCredentials: user),
+      //   );
+      // });
       await UserModel.collection.doc(user.uid).set(UserModel(
             user: user,
             email: email,
-            displayName: name,
-            phoneNumber: user.phoneNumber,
+            name: name,
+            phoneNumber: user.phoneNumber ?? '',
             displayImageUrl: user.photoURL,
             createdAt: DateTime.now(),
             isPremium: false,
@@ -119,9 +134,10 @@ class AuthCubit extends Cubit<AuthState> {
             isAdmin: false,
           ).toFirestore());
     } on FirebaseAuthException catch (e) {
-      emit(AuthError(message: e.message));
+      emit(AuthError(message: e.message, userCredentials: user));
     } catch (_) {
-      emit(AuthError(message: _.toString()));
+      log(_.toString());
+      emit(AuthError(message: _.toString(), userCredentials: user));
     }
   }
 }

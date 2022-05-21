@@ -3,15 +3,15 @@ import 'package:lobby/utils/meta_colors.dart';
 import 'package:lobby/utils/meta_styles.dart';
 
 buildButton(
-    {@required String title,
-    @required Function() handler,
-    Color color,
-    TextStyle titleStyle}) {
+    {required String title,
+    required Function() handler,
+    Color? color,
+    TextStyle? titleStyle}) {
   return Padding(
     padding: const EdgeInsets.all(8.0),
     child: InkWell(
       splashColor: MetaColors.gradientColorTwo,
-      onTap: handler ?? () {},
+      onTap: handler,
       child: Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
@@ -21,7 +21,7 @@ buildButton(
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Text(
-              title ?? "",
+              title,
               style: titleStyle ?? TextStyle(color: Colors.white, fontSize: 19),
             ),
           ),
@@ -32,7 +32,7 @@ buildButton(
 }
 
 class SubTextWidget extends StatelessWidget {
-  const SubTextWidget({Key key, this.title}) : super(key: key);
+  const SubTextWidget({Key? key, required this.title}) : super(key: key);
   final String title;
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class SubTextWidget extends StatelessWidget {
 }
 
 class TitleWidget extends StatelessWidget {
-  const TitleWidget({Key key, this.title}) : super(key: key);
+  const TitleWidget({Key? key, required this.title}) : super(key: key);
   final String title;
   @override
   Widget build(BuildContext context) {
@@ -66,8 +66,7 @@ SnackBar banner(BuildContext context, @required message,
   return SnackBar(
     elevation: 0,
     padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).size.height - 2 * kToolbarHeight,
-        top: kToolbarHeight),
+        bottom: MediaQuery.of(context).size.height * .8, top: kToolbarHeight),
     backgroundColor: Colors.transparent,
     behavior: SnackBarBehavior.floating,
     content: MessageWidget(
@@ -83,8 +82,8 @@ SnackBar banner(BuildContext context, @required message,
 }
 
 class Loader extends StatefulWidget {
-  final String message;
-  const Loader({Key key, this.message}) : super(key: key);
+  final String? message;
+  const Loader({Key? key, this.message}) : super(key: key);
 
   @override
   State<Loader> createState() => _LoaderState();
@@ -136,7 +135,7 @@ class _LoaderState extends State<Loader> {
 }
 
 class MessageWidget extends StatefulWidget {
-  MessageWidget({Key key, this.message, this.isError = false})
+  MessageWidget({Key? key, required this.message, this.isError = false})
       : super(key: key);
   String message;
   bool isError;
@@ -156,6 +155,7 @@ class _MessageWidgetState extends State<MessageWidget>
                 curve: Curves.easeIn)
             .drive(Tween(begin: Offset(0, -1), end: Offset(0.0, 0.5)))),
         child: Container(
+          height: 80,
           decoration: BoxDecoration(
               color: Colors.red,
               gradient: widget.isError ? null : MetaColors.gradient,

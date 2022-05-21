@@ -1,13 +1,13 @@
 part of 'posts_cubit.dart';
 
 class PostsState extends Equatable {
-  final List<PostModel> data;
+  final List<PostModel>? data;
   const PostsState({this.data});
 
   @override
-  List<Object> get props => [data];
+  List<Object> get props => [data!];
 
-  PostsLoaded copyWith({List<PostModel> newData}) {
+  PostsLoaded copyWith({List<PostModel>? newData}) {
     return PostsLoaded(data: newData ?? this.data);
   }
 }
@@ -15,5 +15,5 @@ class PostsState extends Equatable {
 class PostsLoading extends PostsState {}
 
 class PostsLoaded extends PostsState {
-  PostsLoaded({List<PostModel> data}) : super(data: data);
+  PostsLoaded({List<PostModel>? data}) : super(data: data);
 }

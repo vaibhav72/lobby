@@ -12,13 +12,13 @@ import 'package:lobby/utils/utils.dart';
 part 'posts_state.dart';
 
 class PostsCubit extends Cubit<PostsState> {
-  StreamSubscription _categoryPostStreamSubscription;
+  StreamSubscription? _categoryPostStreamSubscription;
 
   final PostRepository postRepository;
 
   // final CategoryModel categoryModel;
   PostsCubit({
-    @required PostRepository postRepository,
+    required PostRepository? postRepository,
   })  : postRepository = postRepository ?? PostRepository(),
         super(PostsLoading());
 
@@ -41,14 +41,14 @@ class PostsCubit extends Cubit<PostsState> {
     });
   }
 
-  void updatePosts({List<PostModel> data}) {
+  void updatePosts({List<PostModel>? data}) {
     print("here");
     if (!isClosed) emit(PostsLoaded(data: data));
   }
 
   likePost(
-      {@required DocumentReference currentUserRef,
-      @required PostModel postModel}) async {
+      {required DocumentReference currentUserRef,
+      required PostModel postModel}) async {
     try {
       postRepository.likePost(currentUserRef, postModel);
     } catch (error) {

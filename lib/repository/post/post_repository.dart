@@ -9,7 +9,7 @@ import 'package:mime_type/mime_type.dart';
 
 class PostRepository extends BasePostRepository {
   final FirebaseFirestore _firebaseFirestore;
-  PostRepository({FirebaseFirestore firebaseFirestore})
+  PostRepository({FirebaseFirestore? firebaseFirestore})
       : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
   @override
   Stream<List<PostModel>> getSpecificPosts(String categoryId) {
@@ -21,14 +21,14 @@ class PostRepository extends BasePostRepository {
           .map((snapshot) =>
               snapshot.docs.map((doc) => PostModel.fromSnapshot(doc)).toList());
     } catch (_) {
-      print(_.toString());
+      throw (_.toString());
     }
 
     // TODO: implement getPosts
   }
 
   @override
-  Future<String> uploadData(String path, Uint8List data) async {
+  uploadData(String path, Uint8List data) async {
     try {
       final storageRef = FirebaseStorage.instance.ref().child(path);
       final metadata = SettableMetadata(contentType: mime(path));
@@ -47,11 +47,11 @@ class PostRepository extends BasePostRepository {
       _firebaseFirestore.collection('socialPosts');
 
   @override
-  Future<DocumentReference> addPost({PostModel postModel}) async {
+  Future<DocumentReference> addPost({PostModel? postModel}) async {
     // TODO: implement addPost
     try {
       DocumentReference documentReference =
-          await collection.add(postModel.toFirestore());
+          await collection.add(postModel!.toFirestore());
       return documentReference;
     } catch (_) {
       throw Exception(_.toString());
@@ -59,7 +59,7 @@ class PostRepository extends BasePostRepository {
   }
 
   @override
-  likePost(DocumentReference<Object> reference, PostModel post) async {
+  likePost(DocumentReference<Object?> reference, PostModel post) async {
     // TODO: implement likePost
 
     try {
@@ -78,7 +78,7 @@ class PostRepository extends BasePostRepository {
       return collection.orderBy("postCreated").snapshots().map((snapshot) =>
           snapshot.docs.map((doc) => PostModel.fromSnapshot(doc)).toList());
     } catch (_) {
-      print(_.toString());
+      throw (_.toString());
     }
   }
 }

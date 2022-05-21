@@ -24,11 +24,11 @@ enum MediaSource {
   camera,
 }
 
-Future<SelectedMedia> selectMediaWithSourceBottomSheet({
-  BuildContext context,
-  double maxWidth,
-  double maxHeight,
-  bool allowPhoto,
+Future<SelectedMedia?> selectMediaWithSourceBottomSheet({
+  required BuildContext context,
+  double? maxWidth,
+  double? maxHeight,
+  required bool allowPhoto,
   bool allowVideo = false,
   String pickerFontFamily = 'Roboto',
   Color textColor = const Color(0xFF111417),
@@ -97,17 +97,17 @@ Future<SelectedMedia> selectMediaWithSourceBottomSheet({
     return null;
   }
   return selectMedia(
-    maxWidth: maxWidth,
-    maxHeight: maxHeight,
+    maxWidth: maxWidth!,
+    maxHeight: maxHeight!,
     isVideo: mediaSource == MediaSource.videoGallery ||
         (mediaSource == MediaSource.camera && allowVideo && !allowPhoto),
     mediaSource: mediaSource,
   );
 }
 
-Future<SelectedMedia> selectMedia({
-  double maxWidth,
-  double maxHeight,
+Future<SelectedMedia?> selectMedia({
+  required double maxWidth,
+  required double maxHeight,
   bool isVideo = false,
   MediaSource mediaSource = MediaSource.camera,
 }) async {
@@ -125,7 +125,7 @@ Future<SelectedMedia> selectMedia({
     return null;
   }
   final path = storagePath(
-      FirebaseAuth.instance.currentUser.uid, pickedMedia.name, isVideo);
+      FirebaseAuth.instance.currentUser!.uid, pickedMedia!.name, isVideo);
   return SelectedMedia(path, mediaBytes, pickedMedia.path, isVideo);
 }
 

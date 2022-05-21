@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,8 +12,8 @@ import 'package:lobby/screens/home_screens/contest_screens/post_details_widget.d
 import 'package:lobby/utils/meta_assets.dart';
 import 'package:lobby/utils/meta_colors.dart';
 
-class PostTile extends StatelessWidget {
-  const PostTile({Key? key, required this.post}) : super(key: key);
+class CategoryPostTile extends StatelessWidget {
+  const CategoryPostTile({Key? key, required this.post}) : super(key: key);
   final PostModel post;
   @override
   Widget build(BuildContext context) {
@@ -30,35 +32,6 @@ class PostTile extends StatelessWidget {
             ]),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Icon(Icons.camera),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Photography",
-                            style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w500),
-                          ),
-                          Text(
-                            "By tevd",
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.w300),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Icon(Icons.arrow_forward_ios)
-                ],
-              ),
-            ),
             post.postImage != null && post.postImage.isNotEmpty
                 ? InkWell(
                     splashColor: MetaColors.gradientColorOne,
@@ -69,11 +42,16 @@ class PostTile extends StatelessWidget {
                               builder: (context) =>
                                   FullScreenImage(post: post)));
                     },
-                    child: CachedNetworkImage(
-                      height: 200,
-                      width: double.infinity,
-                      imageUrl: post.postImage,
-                      fit: BoxFit.fill,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15)),
+                      child: CachedNetworkImage(
+                        height: 200,
+                        width: double.infinity,
+                        imageUrl: post.postImage,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   )
                 : Text(''),
@@ -229,3 +207,4 @@ class PostTile extends StatelessWidget {
     );
   }
 }
+

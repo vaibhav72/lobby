@@ -10,16 +10,16 @@ part 'category_event.dart';
 part 'category_state.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
-  StreamSubscription _categoryStreamSubscription;
+  StreamSubscription? _categoryStreamSubscription;
   final CategoryRepository categoryRepository;
-  CategoryBloc({@required CategoryRepository categoryRepository})
+  CategoryBloc({required CategoryRepository? categoryRepository})
       : categoryRepository = categoryRepository ?? CategoryRepository(),
         super(CategoryLoading()) {
     on<CategoryEvent>((event, emit) async {
       if (event is LoadCategories) {
         _categoryStreamSubscription?.cancel();
         _categoryStreamSubscription =
-            categoryRepository.categoryList().listen((data) {
+            categoryRepository?.categoryList().listen((data) {
           add(UpdateCategories(categoryList: data));
         });
       }

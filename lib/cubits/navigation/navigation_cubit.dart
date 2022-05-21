@@ -6,7 +6,7 @@ part 'navigation_state.dart';
 class NavigationCubit extends Cubit<NavigationState> {
   NavigationCubit() : super(NavigationInitial(index: 0));
 
-  void changeIndex({int index}) {
+  void changeIndex({int? index}) {
     emit(state.copyWith(index: index));
   }
 }

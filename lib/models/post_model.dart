@@ -20,33 +20,33 @@ class PostModel {
 
   String postUserImage;
   String categoryId;
-  String id;
+  String? id;
 
   List<DocumentReference> likes;
   PostModel(
-      {@required this.postCreated,
-      @required this.postImage,
-      @required this.postVideo,
-      @required this.postDescription,
-      @required this.postUser,
-      @required this.postDisplayName,
-      @required this.postUserImage,
-      @required this.likes,
-      @required this.categoryId,
-      @required this.postUserName,
+      {required this.postCreated,
+      required this.postImage,
+      required this.postVideo,
+      required this.postDescription,
+      required this.postUser,
+      required this.postDisplayName,
+      required this.postUserImage,
+      required this.likes,
+      required this.categoryId,
+      required this.postUserName,
       this.id});
 
   PostModel copyWith({
-    DateTime postCreated,
-    String postImage,
-    String postVideo,
-    String categoryId,
-    String postDescription,
-    DocumentReference postUser,
-    String postDisplayName,
-    String postUserImage,
-    String postUserName,
-    List<DocumentReference> likes,
+    DateTime? postCreated,
+    String? postImage,
+    String? postVideo,
+    String? categoryId,
+    String? postDescription,
+    DocumentReference? postUser,
+    String? postDisplayName,
+    String? postUserImage,
+    String? postUserName,
+    List<DocumentReference>? likes,
   }) {
     return PostModel(
         postCreated: postCreated ?? this.postCreated,
@@ -81,7 +81,7 @@ class PostModel {
       postCreated: (doc['postCreated'] as Timestamp).toDate(),
       postImage: doc['postImage'] ?? '',
       id: doc.id,
-      // postUserName: doc['postUserName'] ?? '',
+      postUserName: '',
       postVideo: doc['postVideo'] ?? '',
       postDescription: doc['postDescription'] ?? '',
       postUser: (doc['postUser']),

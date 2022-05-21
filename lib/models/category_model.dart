@@ -10,19 +10,19 @@ class CategoryModel {
   int categoryContestants;
   String categoryId;
   CategoryModel({
-    @required this.categoryName,
-    @required this.categoryDeadline,
-    @required this.categoryImage,
-    @required this.categoryContestants,
-    @required this.categoryId,
+    required this.categoryName,
+    required this.categoryDeadline,
+    required this.categoryImage,
+    required this.categoryContestants,
+    required this.categoryId,
   });
 
   CategoryModel copyWith({
-    String categoryName,
-    DateTime categoryDeadline,
-    String categoryImage,
-    int categoryContestants,
-    String categoryId,
+    String? categoryName,
+    DateTime? categoryDeadline,
+    String? categoryImage,
+    int? categoryContestants,
+    String? categoryId,
   }) {
     return CategoryModel(
       categoryName: categoryName ?? this.categoryName,
@@ -49,7 +49,7 @@ class CategoryModel {
       categoryDeadline: snapshot['categoryDeadline'].toDate(),
       categoryImage: snapshot['categoryImage'] ?? '',
       categoryContestants: snapshot['categoryContestants']?.toInt() ?? 0,
-      categoryId: snapshot.id ?? '',
+      categoryId: snapshot.id,
     );
   }
 

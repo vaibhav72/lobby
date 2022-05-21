@@ -17,7 +17,7 @@ import 'package:lobby/utils/utils.dart';
 
 class ViewAllPosts extends StatefulWidget {
   const ViewAllPosts({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -37,107 +37,11 @@ class _ViewAllPostsState extends State<ViewAllPosts> {
             return Scaffold(
               body: ListView.builder(
                   padding: EdgeInsets.zero,
+                  addAutomaticKeepAlives: false,
                   itemCount: state.data?.length ?? 0,
                   itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return Column(
-                        children: [
-                          Container(
-                            height: MediaQuery.of(context).size.height * .1,
-                            width: MediaQuery.of(context).size.width,
-                            child: BlocBuilder<CategoryBloc, CategoryState>(
-                              buildWhen: (previous, current) =>
-                                  previous != current,
-                              builder: (context, state) {
-                                if (state is CategoryLoaded)
-                                  // ignore: curly_braces_in_flow_control_structures
-                                  return ListView.builder(
-                                      // padding: EdgeInsets.zero,
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: state?.categoryList?.length,
-                                      itemBuilder: (context, index) {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ViewCategoryPosts(
-                                                            category: state
-                                                                    ?.categoryList[
-                                                                index],
-                                                          )));
-                                            },
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                              child: Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    .45,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                          color: MetaColors
-                                                              .categoryShadow,
-                                                          offset: Offset(0, 3),
-                                                          blurRadius: 25)
-                                                    ],
-                                                    image: DecorationImage(
-                                                        fit: BoxFit.fill,
-                                                        image: NetworkImage(state
-                                                            ?.categoryList[
-                                                                index]
-                                                            .categoryImage))),
-                                                child: BackdropFilter(
-                                                    filter: ImageFilter.blur(
-                                                        sigmaX: 2, sigmaY: 2),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: Center(
-                                                        child: Text(
-                                                          state
-                                                              ?.categoryList[
-                                                                  index]
-                                                              .categoryName,
-                                                          style: TextStyle(
-                                                              fontSize: 12,
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
-                                                        ),
-                                                      ),
-                                                    )),
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      });
-                                if (state is CategoryLoading)
-                                  return CircularProgressIndicator();
-                                return SizedBox.shrink();
-                              },
-                            ),
-                          ),
-                          PostTile(
-                            post: state.data[index],
-                          )
-                        ],
-                      );
-                    }
                     return PostTile(
-                      post: state.data[index],
+                      post: state.data![index],
                     );
                   }),
             );
