@@ -1,10 +1,13 @@
 import 'dart:ui';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:lobby/cubits/cubit/auth_cubit.dart';
+import 'package:lobby/cubits/auth/auth_cubit.dart';
+
 
 import 'package:lobby/cubits/posts/posts_cubit.dart';
 import 'package:lobby/models/post_model.dart';
@@ -26,7 +29,10 @@ class _FullScreenImageState extends State<FullScreenImage> {
     return Container(
       child: Scaffold(
           body: GestureDetector(
-        onTap: () {
+        onTap: () async {
+          AudioCache cache = new AudioCache();
+          HapticFeedback.mediumImpact();
+          await cache.play(MetaAssets.viewScreenAudio);
           setState(() {
             showDetails = !showDetails;
           });
@@ -63,7 +69,7 @@ class _FullScreenImageState extends State<FullScreenImage> {
                 child: AnimatedScale(
                     curve: Curves.bounceOut,
                     scale: showDetails ? 1 : 0,
-                    duration: Duration(milliseconds: 500),
+                    duration: Duration(milliseconds: 300),
                     child: PostDetailsWidget(post: widget.post)),
               ),
             ],

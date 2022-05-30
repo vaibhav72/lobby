@@ -22,10 +22,10 @@ class PostsCubit extends Cubit<PostsState> {
   })  : postRepository = postRepository ?? PostRepository(),
         super(PostsLoading());
 
-  void loadSpecificPosts(String categoryId) {
+  void loadSpecificPosts(String competitionId) {
     _categoryPostStreamSubscription?.cancel();
     _categoryPostStreamSubscription =
-        postRepository.getSpecificPosts(categoryId).listen((data) {
+        postRepository.getSpecificPosts(competitionId).listen((data) {
       print(data);
 
       updatePosts(data: data);

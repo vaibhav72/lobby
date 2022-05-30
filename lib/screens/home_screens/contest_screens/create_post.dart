@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lobby/cubits/auth/auth_cubit.dart';
 
 import 'package:lobby/cubits/create_post/create_post_cubit.dart';
-import 'package:lobby/cubits/cubit/auth_cubit.dart';
+
 import 'package:lobby/cubits/posts/posts_cubit.dart';
 import 'package:lobby/models/category_model.dart';
 import 'package:lobby/repository/post/post_repository.dart';
@@ -199,6 +200,7 @@ class _PostCreateWidgetState extends State<PostCreateWidget>
                     onPressed: () {
                       if (selectedMedia?.storagePath != null) {
                         BlocProvider.of<CreatePostCubit>(context).addPost(
+                            competitionId: '',
                             title: textController.text,
                             description: descriptionController.text,
                             currentUserImage:

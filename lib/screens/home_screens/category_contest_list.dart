@@ -32,14 +32,7 @@ class _CategoryContestListState extends State<CategoryContestList> {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ViewCategoryPosts(
-                                          category: state.categoryList![index],
-                                        )));
-                          },
+                          onTap: () {},
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(25),
                             child: Container(

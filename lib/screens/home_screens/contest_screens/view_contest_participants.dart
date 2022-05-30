@@ -6,40 +6,33 @@ import 'package:lobby/cubits/posts/posts_cubit.dart';
 import 'package:lobby/models/category_model.dart';
 import 'package:lobby/models/post_model.dart';
 import 'package:lobby/repository/post/post_repository.dart';
-import 'package:lobby/screens/home_screens/contest_screens/category_post_tile.dart';
+import 'package:lobby/screens/home_screens/contest_screens/competition_post_tile.dart';
 import 'package:lobby/screens/home_screens/contest_screens/create_post.dart';
 import 'package:lobby/screens/home_screens/contest_screens/post_tile.dart';
 import 'package:lobby/utils/utils.dart';
 
-class ViewCategoryPosts extends StatefulWidget {
-  final CategoryModel category;
-  const ViewCategoryPosts({Key? key, required this.category}) : super(key: key);
+class ViewContestParticipants extends StatefulWidget {
+  final String competitionId;
+
+  const ViewContestParticipants({Key? key, required this.competitionId})
+      : super(key: key);
 
   @override
-  _ViewCategoryPostsState createState() => _ViewCategoryPostsState();
+  State<ViewContestParticipants> createState() =>
+      _ViewContestParticipantsState();
 }
 
-class _ViewCategoryPostsState extends State<ViewCategoryPosts> {
+class _ViewContestParticipantsState extends State<ViewContestParticipants> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => PostsCubit(
         postRepository: PostRepository(),
-      )..loadSpecificPosts(widget.category.categoryId),
+      )..loadSpecificPosts(widget.competitionId),
       child: BlocBuilder<PostsCubit, PostsState>(
         builder: (context, state) {
           if (state is PostsLoaded) {
             return Scaffold(
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PostCreateWidget(
-                                categoryModel: widget.category,
-                              )));
-                },
-              ),
               body: Column(
                 children: [
                   Padding(padding: MediaQuery.of(context).padding),
@@ -85,7 +78,7 @@ class _ViewCategoryPostsState extends State<ViewCategoryPosts> {
                         padding: EdgeInsets.zero,
                         itemCount: state.data?.length ?? 0,
                         itemBuilder: (context, index) {
-                          return CategoryPostTile(
+                          return CompetitionPostTile(
                             post: state.data![index],
                           );
                         }),

@@ -38,10 +38,10 @@ class _ViewAllPostsState extends State<ViewAllPosts> {
               body: ListView.builder(
                   padding: EdgeInsets.zero,
                   addAutomaticKeepAlives: false,
-                  itemCount: state.data?.length ?? 0,
+                  itemCount: 30,
                   itemBuilder: (context, index) {
                     return PostTile(
-                      post: state.data![index],
+                      post: state.data![0],
                     );
                   }),
             );

@@ -6,6 +6,9 @@ class MetaAssets {
   static const otpIllustration = 'assets/animations/otp.json';
   static const String otpIcon = 'assets/otp_icon.png';
 
+  //competition Icons
+  static const String giftIcon = 'assets/gift_closed.png';
+
   //profileIcons
   static const String aboutUsIcon = 'assets/about_us.png';
   static const String rateUsIcon = 'assets/rate_us.png';
@@ -24,4 +27,6 @@ class MetaAssets {
   static const String leaderboardIcon = 'assets/leaderboard_icon.png';
   static const String likeIcon = 'assets/like.png';
   static const String uploadPostIcon = 'assets/upload_post_icon.png';
+  static const String viewScreenAudio = 'view_screen.mp3';
+  static const String postClickAudio = 'click.mp3';
 }

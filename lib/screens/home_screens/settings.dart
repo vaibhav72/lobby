@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lobby/cubits/cubit/auth_cubit.dart';
+import 'package:lobby/cubits/auth/auth_cubit.dart';
+
 import 'package:lobby/utils/meta_assets.dart';
 import 'package:lobby/utils/meta_colors.dart';
 import 'package:lobby/utils/meta_styles.dart';
@@ -40,7 +42,9 @@ class _SettingsState extends State<Settings> {
                     ProfileOptionsTile(
                       title: 'Audio Settings',
                       asset: MetaAssets.audioSettingsIcon,
-                      onTap: () {},
+                      onTap: () {
+                        HapticFeedback.vibrate();
+                      },
                     ),
                     ProfileOptionsTile(
                       title: 'Appearance',

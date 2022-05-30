@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:lobby/bloc/category/category_bloc.dart';
-import 'package:lobby/cubits/cubit/auth_cubit.dart';
+
 import 'package:lobby/cubits/navigation/navigation_cubit.dart';
 
 import 'package:lobby/repository/category/category_repository.dart';
@@ -16,6 +16,8 @@ import 'package:lobby/screens/auth_screens/sign_in.dart';
 import 'package:lobby/screens/home_screens/home.dart';
 import 'package:lobby/screens/home_screens/settings.dart';
 import 'package:lobby/utils/meta_colors.dart';
+
+import 'cubits/auth/auth_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -84,9 +86,11 @@ class _SplashScreenState extends State<SplashScreen> {
               if (state is AuthLoggedIn) {
                 return MaterialApp(
                     theme: ThemeData(
+                      iconTheme: IconThemeData(color: MetaColors.textColor),
                       scaffoldBackgroundColor: Colors.white,
                       appBarTheme: AppBarTheme(
                           centerTitle: true,
+                          iconTheme: IconThemeData(color: MetaColors.textColor),
                           color: Colors.white,
                           elevation: 0,
                           titleTextStyle: TextStyle(

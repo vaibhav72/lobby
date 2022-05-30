@@ -1,10 +1,12 @@
 import 'dart:ui';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:lobby/cubits/cubit/auth_cubit.dart';
+import 'package:lobby/cubits/auth/auth_cubit.dart';
 
 import 'package:lobby/cubits/posts/posts_cubit.dart';
 import 'package:lobby/models/post_model.dart';
@@ -12,8 +14,8 @@ import 'package:lobby/screens/home_screens/contest_screens/post_details_widget.d
 import 'package:lobby/utils/meta_assets.dart';
 import 'package:lobby/utils/meta_colors.dart';
 
-class CategoryPostTile extends StatelessWidget {
-  const CategoryPostTile({Key? key, required this.post}) : super(key: key);
+class CompetitionPostTile extends StatelessWidget {
+  const CompetitionPostTile({Key? key, required this.post}) : super(key: key);
   final PostModel post;
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,10 @@ class CategoryPostTile extends StatelessWidget {
             post.postImage != null && post.postImage.isNotEmpty
                 ? InkWell(
                     splashColor: MetaColors.gradientColorOne,
-                    onTap: () {
+                    onTap: () async {
+                      AudioCache cache = new AudioCache();
+                      HapticFeedback.lightImpact();
+                      await cache.play(MetaAssets.postClickAudio);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -207,4 +212,3 @@ class CategoryPostTile extends StatelessWidget {
     );
   }
 }
-

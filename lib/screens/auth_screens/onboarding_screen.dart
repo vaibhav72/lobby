@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lobby/cubits/cubit/auth_cubit.dart';
+import 'package:lobby/cubits/auth/auth_cubit.dart';
 import 'package:lobby/screens/auth_screens/helpers/auth_widgets.dart';
 import 'package:lobby/screens/auth_screens/sign_in.dart';
 import 'package:lobby/screens/auth_screens/sign_up.dart';

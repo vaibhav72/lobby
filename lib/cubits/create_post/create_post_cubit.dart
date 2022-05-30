@@ -6,6 +6,7 @@ import 'package:lobby/models/category_model.dart';
 import 'package:lobby/models/post_model.dart';
 import 'package:lobby/repository/post/post_repository.dart';
 import 'package:lobby/utils/upload_media.dart';
+import 'package:ntp/ntp.dart';
 
 part 'create_post_state.dart';
 
@@ -23,6 +24,7 @@ class CreatePostCubit extends Cubit<CreatePostState> {
       required String currentUserImage,
       required DocumentReference currentUserRef,
       required String postUserName,
+      required String competitionId,
       required SelectedMedia media}) async {
     try {
       emit(CreatePostLoading());
@@ -31,7 +33,13 @@ class CreatePostCubit extends Cubit<CreatePostState> {
       if (url != null) {
         DocumentReference documentReference = await _postRepository.addPost(
             postModel: PostModel(
-                postCreated: DateTime.now(),
+                competitionByUrl: currentUserRef,
+                competitionUserImage: '',
+                competitionUserName: '',
+                competitionId: competitionId,
+                competitionImage: '',
+                competitionTitle: '',
+                postCreated:(await NTP.now()),
                 postImage: media.isVideo ? "" : url,
                 postVideo: !media.isVideo ? "" : url,
                 postDescription: description,

@@ -12,10 +12,10 @@ class PostRepository extends BasePostRepository {
   PostRepository({FirebaseFirestore? firebaseFirestore})
       : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
   @override
-  Stream<List<PostModel>> getSpecificPosts(String categoryId) {
+  Stream<List<PostModel>> getSpecificPosts(String competitionId) {
     try {
       return collection
-          .where("categoryId", isEqualTo: categoryId)
+          .where("competitionId", isEqualTo: competitionId)
           .orderBy("postCreated")
           .snapshots()
           .map((snapshot) =>

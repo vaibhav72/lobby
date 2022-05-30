@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lobby/models/user_model.dart';
+import 'package:ntp/ntp.dart';
 
 part 'auth_state.dart';
 
@@ -128,7 +129,35 @@ class AuthCubit extends Cubit<AuthState> {
             name: name,
             phoneNumber: user.phoneNumber ?? '',
             displayImageUrl: user.photoURL,
-            createdAt: DateTime.now(),
+            createdAt: (await NTP.now()),
+            isPremium: false,
+            balance: 0,
+            isAdmin: false,
+          ).toFirestore());
+    } on FirebaseAuthException catch (e) {
+      emit(AuthError(message: e.message, userCredentials: user));
+    } catch (_) {
+      log(_.toString());
+      emit(AuthError(message: _.toString(), userCredentials: user));
+    }
+  }
+
+  update(User user, String email, String name) async {
+    // TODO: implement createUser
+    try {
+      // user.updateEmail(email).catchError((e) {
+      //   log(e.toString());
+      //   emit(
+      //     AuthError(message: e.toString(), userCredentials: user),
+      //   );
+      // });
+      await UserModel.collection.doc(user.uid).set(UserModel(
+            user: user,
+            email: email,
+            name: name,
+            phoneNumber: user.phoneNumber ?? '',
+            displayImageUrl: user.photoURL,
+            createdAt: (await NTP.now()),
             isPremium: false,
             balance: 0,
             isAdmin: false,

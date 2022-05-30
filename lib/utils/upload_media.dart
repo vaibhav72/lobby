@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:mime_type/mime_type.dart';
+import 'package:ntp/ntp.dart';
 
 const allowedFormats = {'image/png', 'image/jpeg', 'video/mp4', 'image/gif'};
 
@@ -97,8 +98,8 @@ Future<SelectedMedia?> selectMediaWithSourceBottomSheet({
     return null;
   }
   return selectMedia(
-    maxWidth: maxWidth!,
-    maxHeight: maxHeight!,
+    maxWidth: maxWidth,
+    maxHeight: maxHeight,
     isVideo: mediaSource == MediaSource.videoGallery ||
         (mediaSource == MediaSource.camera && allowVideo && !allowPhoto),
     mediaSource: mediaSource,
@@ -106,8 +107,8 @@ Future<SelectedMedia?> selectMediaWithSourceBottomSheet({
 }
 
 Future<SelectedMedia?> selectMedia({
-  required double maxWidth,
-  required double maxHeight,
+  double? maxWidth,
+  double? maxHeight,
   bool isVideo = false,
   MediaSource mediaSource = MediaSource.camera,
 }) async {
@@ -141,8 +142,8 @@ bool validateFileFormat(String filePath, BuildContext context) {
   return false;
 }
 
-String storagePath(String uid, String filePath, bool isVideo) {
-  final timestamp = DateTime.now().microsecondsSinceEpoch;
+storagePath(String uid, String filePath, bool isVideo) async {
+  final timestamp = (await NTP.now()).microsecondsSinceEpoch;
   // Workaround fixed by https://github.com/flutter/plugins/pull/3685
   // (not yet in stable).
   final ext = isVideo ? 'mp4' : filePath.split('.').last;

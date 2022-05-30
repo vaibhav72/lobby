@@ -82,6 +82,7 @@ class UserModel {
     return UserModel(
         name: map['name'] ?? '',
         // user: User.fromMap(map['user']),
+        documentReference: collection.doc(map.id),
         displayImageUrl: map['displayImageUrl'] ?? '',
         phoneNumber: map['phoneNumber'] ?? '',
         isPremium: map['isPremium'] ?? false,
