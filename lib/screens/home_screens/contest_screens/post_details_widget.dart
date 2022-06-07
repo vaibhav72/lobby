@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:lobby/cubits/auth/auth_cubit.dart';
 
-
 import 'package:lobby/cubits/posts/posts_cubit.dart';
 import 'package:lobby/models/post_model.dart';
 import 'package:lobby/utils/meta_assets.dart';
@@ -80,9 +79,15 @@ class _FullScreenImageState extends State<FullScreenImage> {
   }
 }
 
-class PostDetailsWidget extends StatelessWidget {
+class PostDetailsWidget extends StatefulWidget {
   const PostDetailsWidget({Key? key, required this.post}) : super(key: key);
   final PostModel post;
+
+  @override
+  State<PostDetailsWidget> createState() => _PostDetailsWidgetState();
+}
+
+class _PostDetailsWidgetState extends State<PostDetailsWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -116,7 +121,7 @@ class PostDetailsWidget extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          post.postDisplayName,
+                          widget.post.postDisplayName,
                           style: TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w500),
                         ),
@@ -144,55 +149,104 @@ class PostDetailsWidget extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8.0, vertical: 4),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          GestureDetector(
-                              onTap: () {
-                                if (!(post.likes.isNotEmpty &&
-                                    post.likes.contains(
-                                      BlocProvider.of<AuthCubit>(context)
-                                          .state
-                                          .user!
-                                          .documentReference,
-                                    )))
-                                  BlocProvider.of<PostsCubit>(context).likePost(
-                                      currentUserRef:
-                                          BlocProvider.of<AuthCubit>(context)
-                                              .state
-                                              .user!
-                                              .documentReference!,
-                                      postModel: post);
-                              },
-                              child: post.likes.isNotEmpty &&
-                                      post.likes.contains(
+                      child: (widget.post.likes.isNotEmpty &&
+                                  widget.post.likes.contains(
+                                    BlocProvider.of<AuthCubit>(context)
+                                        .state
+                                        .user!
+                                        .documentReference,
+                                  ) ||
+                              BlocProvider.of<AuthCubit>(context)
+                                      .state
+                                      .user!
+                                      .likedPosts
+                                      .isNotEmpty &&
+                                  BlocProvider.of<AuthCubit>(context)
+                                      .state
+                                      .user!
+                                      .likedPosts
+                                      .contains(widget.post.id))
+                          ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                GestureDetector(
+                                    onTap: () {},
+                                    child: const Image(
+                                        image: const AssetImage(
+                                            MetaAssets.likeIcon))),
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                Text(
+                                  "${(!widget.post.likes.contains(
                                         BlocProvider.of<AuthCubit>(context)
                                             .state
                                             .user!
                                             .documentReference,
-                                      )
-                                  ? Image(
-                                      image: AssetImage(MetaAssets.likeIcon))
-                                  : Icon(Icons.favorite_border,
-                                      color: Colors.black)),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                            "${post.likes.length}",
-                            style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w500),
-                          ),
-                          SizedBox(
-                            width: 3,
-                          ),
-                          Text(
-                            post.likes.length > 1 ? 'likes' : 'like',
-                            style: TextStyle(
-                                fontSize: 8, fontWeight: FontWeight.w300),
-                          ),
-                        ],
-                      ),
+                                      ) && BlocProvider.of<AuthCubit>(context).state.user!.likedPosts.isNotEmpty && BlocProvider.of<AuthCubit>(context).state.user!.likedPosts.contains(widget.post.id)) ? widget.post.likes.length + 1 : widget.post.likes.length}",
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                const SizedBox(
+                                  width: 3,
+                                ),
+                                Text(
+                                  widget.post.likes.length > 1
+                                      ? 'likes'
+                                      : 'like',
+                                  style: const TextStyle(
+                                      fontSize: 8, fontWeight: FontWeight.w300),
+                                ),
+                              ],
+                            )
+                          : Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                GestureDetector(
+                                    onTap: () {
+                                      if (!widget.post.likes.contains(
+                                          BlocProvider.of<AuthCubit>(context)
+                                              .state
+                                              .user!
+                                              .documentReference)) {
+                                        print("here");
+                                        setState(() {
+                                          widget.post.likes.add(
+                                              BlocProvider.of<AuthCubit>(
+                                                      context)
+                                                  .state
+                                                  .user!
+                                                  .documentReference!);
+                                        });
+                                      }
+
+                                      BlocProvider.of<AuthCubit>(context)
+                                          .likePost(widget.post);
+                                    },
+                                    child: const Icon(Icons.favorite_border,
+                                        color: Colors.black)),
+                                Text(
+                                  "${widget.post.likes.length}",
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                const SizedBox(
+                                  width: 3,
+                                ),
+                                Text(
+                                  widget.post.likes.length > 1
+                                      ? 'likes'
+                                      : 'like',
+                                  style: const TextStyle(
+                                      fontSize: 8, fontWeight: FontWeight.w300),
+                                ),
+                              ],
+                            ),
                     ),
                   ),
                   SizedBox(

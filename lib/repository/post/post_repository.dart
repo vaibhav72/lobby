@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
 import 'package:lobby/models/post_model.dart';
+import 'package:lobby/models/user_model.dart';
+import 'package:lobby/repository/competitions/competition_repository.dart';
 import 'package:lobby/repository/post/base_post_repository.dart';
 import 'package:mime_type/mime_type.dart';
 
@@ -28,14 +30,13 @@ class PostRepository extends BasePostRepository {
   }
 
   @override
-  uploadData(String path, Uint8List data) async {
+  Stream<TaskSnapshot> uploadData(String path, Uint8List data) {
     try {
       final storageRef = FirebaseStorage.instance.ref().child(path);
       final metadata = SettableMetadata(contentType: mime(path));
-      final result = await storageRef.putData(data, metadata);
-      return result.state == TaskState.success
-          ? result.ref.getDownloadURL()
-          : null;
+      final Stream<TaskSnapshot> result =
+          storageRef.putData(data, metadata).snapshotEvents;
+      return result;
     } catch (error) {
       throw Exception(error.toString());
     }
@@ -45,6 +46,33 @@ class PostRepository extends BasePostRepository {
   // TODO: implement collection
   CollectionReference<Object> get collection =>
       _firebaseFirestore.collection('socialPosts');
+  static Query? getAllPostsListQuery() =>
+      PostRepository().collection.orderBy("postCreated");
+  static Query? getCategoryPostsListQuery(String competitionId) =>
+      PostRepository()
+          .collection
+          .where("competitionId", isEqualTo: competitionId)
+          .orderBy("postCreated");
+
+  static Query? getUserCategoryPostsQuery(String userId, {String? categoryId}) {
+    print(userId);
+    return categoryId != null
+        ? PostRepository()
+            .collection
+            .where(
+              "postUserId",
+              isEqualTo: userId,
+            )
+            .where('categoryId', isEqualTo: categoryId)
+            .orderBy("postCreated")
+        : PostRepository()
+            .collection
+            .where(
+              "postUserId",
+              isEqualTo: userId,
+            )
+            .orderBy("postCreated");
+  }
 
   @override
   Future<DocumentReference> addPost({PostModel? postModel}) async {
@@ -52,6 +80,10 @@ class PostRepository extends BasePostRepository {
     try {
       DocumentReference documentReference =
           await collection.add(postModel!.toFirestore());
+      await CompetitionRepository()
+          .addJoinee(postModel.competitionId, documentReference);
+      await postModel.postUser
+          .update({'contestEntered': FieldValue.increment(1)});
       return documentReference;
     } catch (_) {
       throw Exception(_.toString());
@@ -60,8 +92,6 @@ class PostRepository extends BasePostRepository {
 
   @override
   likePost(DocumentReference<Object?> reference, PostModel post) async {
-    // TODO: implement likePost
-
     try {
       await collection.doc(post.id).update({
         'likes': FieldValue.arrayUnion([reference])
@@ -73,7 +103,6 @@ class PostRepository extends BasePostRepository {
 
   @override
   Stream<List<PostModel>> getAllRandomPosts() {
-    // TODO: implement getAllRandomPosts
     try {
       return collection.orderBy("postCreated").snapshots().map((snapshot) =>
           snapshot.docs.map((doc) => PostModel.fromSnapshot(doc)).toList());

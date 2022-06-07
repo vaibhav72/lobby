@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:lobby/utils/utils.dart';
 
 class Competition {
+  final String? id;
   final String competitionTitle;
   final String competitionImage;
   final String competitionCategory;
@@ -18,8 +19,11 @@ class Competition {
   final int prizeAmount;
   final DateTime endDate;
   final String competitionCreatorImage;
+  final String competitionDetails;
+  final String competitionRules;
 
   Competition({
+    this.id,
     required this.competitionTitle,
     required this.competitionImage,
     required this.category,
@@ -32,6 +36,8 @@ class Competition {
     required this.prizeAmount,
     required this.competitionCreatorName,
     required this.competitionCreatorImage,
+    required this.competitionDetails,
+    required this.competitionRules,
   });
   static CollectionReference get collection =>
       FirebaseFirestore.instance.collection('competitions');
@@ -48,6 +54,8 @@ class Competition {
     int? prizeAmount,
     String? competitionCreatorName,
     String? competitionCreatorImage,
+    String? competitionDetails,
+    String? competitionRules,
   }) {
     return Competition(
       competitionTitle: competitionTitle ?? this.competitionTitle,
@@ -64,6 +72,8 @@ class Competition {
           competitionCreatorName ?? this.competitionCreatorName,
       competitionCreatorImage:
           competitionCreatorImage ?? this.competitionCreatorImage,
+      competitionDetails: competitionDetails ?? this.competitionDetails,
+      competitionRules: competitionRules ?? this.competitionRules,
     );
   }
 
@@ -81,11 +91,14 @@ class Competition {
       'prizeAmount': prizeAmount,
       'competitionCreatorName': competitionCreatorName,
       'competitionCreatorImage': competitionCreatorImage,
+      'competitionDetails': competitionDetails,
+      'competitionRules': competitionRules,
     };
   }
 
   factory Competition.fromSnapshot(DocumentSnapshot map) {
     return Competition(
+      id: map.id,
       competitionTitle: map['competitionTitle'] ?? '',
       competitionImage: map['competitionImageUrl'] ?? '',
       category: collection.doc(map['categoryId']),
@@ -99,6 +112,8 @@ class Competition {
       prizeAmount: map['prizeAmount'] ?? 0,
       competitionCreatorName: map['competitionCreatorName'] ?? '',
       competitionCreatorImage: map['competitionCreatorImage'] ?? '',
+      competitionDetails: map['competitionDetails'] ?? '',
+      competitionRules: map['competitionRules'] ?? '',
     );
   }
 

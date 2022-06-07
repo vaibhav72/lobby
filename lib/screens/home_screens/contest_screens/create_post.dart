@@ -47,7 +47,7 @@ class _PostCreateWidgetState extends State<PostCreateWidget>
     return Scaffold(
       body: BlocProvider(
         create: (context) => CreatePostCubit(
-            categoryModel: widget.categoryModel,
+            categoryId: widget.categoryModel.categoryId,
             postRepository: PostRepository()),
         child: BlocConsumer<CreatePostCubit, CreatePostState>(
           listener: (context, state) {
@@ -199,24 +199,29 @@ class _PostCreateWidgetState extends State<PostCreateWidget>
                     color: Colors.blue,
                     onPressed: () {
                       if (selectedMedia?.storagePath != null) {
-                        BlocProvider.of<CreatePostCubit>(context).addPost(
-                            competitionId: '',
-                            title: textController.text,
-                            description: descriptionController.text,
-                            currentUserImage:
-                                BlocProvider.of<AuthCubit>(context)
-                                    .state
-                                    .user!
-                                    .displayImageUrl!,
-                            postUserName: BlocProvider.of<AuthCubit>(context)
-                                .state
-                                .user!
-                                .user!
-                                .displayName!,
-                            currentUserRef: FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(FirebaseAuth.instance.currentUser!.uid),
-                            media: selectedMedia!);
+                        // BlocProvider.of<CreatePostCubit>(context).addPost(
+                        //     postUserId: BlocProvider.of<AuthCubit>(context)
+                        //         .state
+                        //         .user!
+                        //         .user!
+                        //         .uid,
+                        //     competitionId: '',
+                        //     title: textController.text,
+                        //     description: descriptionController.text,
+                        //     currentUserImage:
+                        //         BlocProvider.of<AuthCubit>(context)
+                        //             .state
+                        //             .user!
+                        //             .displayImageUrl!,
+                        //     postUserName: BlocProvider.of<AuthCubit>(context)
+                        //         .state
+                        //         .user!
+                        //         .user!
+                        //         .displayName!,
+                        //     currentUserRef: FirebaseFirestore.instance
+                        //         .collection('users')
+                        //         .doc(FirebaseAuth.instance.currentUser!.uid),
+                        //     media: selectedMedia!);
                       } else
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Please select an image")));

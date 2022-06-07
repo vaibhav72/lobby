@@ -40,4 +40,21 @@ class CompetitionRepository extends BaseCompetitionRepository {
       throw Exception(_.toString());
     }
   }
+
+  addJoinee(String competitionId, DocumentReference reference) async {
+    try {
+      await collection.doc(competitionId).update({
+        'joineeList': FieldValue.arrayUnion([reference.id])
+      });
+    } catch (error) {
+      throw Exception(error.toString());
+    }
+  }
+
+  Future<Competition> getCompetitionById(String id) async {
+    return await collection
+        .doc(id)
+        .get()
+        .then((value) => Competition.fromSnapshot(value));
+  }
 }

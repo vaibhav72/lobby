@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lobby/cubits/auth/auth_cubit.dart';
+import 'package:lobby/screens/home_screens/view_profile.dart';
 
 import 'package:lobby/utils/meta_assets.dart';
 import 'package:lobby/utils/meta_colors.dart';
@@ -33,7 +34,7 @@ class _SettingsState extends State<Settings> {
                 child: ListView(
                   children: [
                     ProfileOptionsTile(
-                      title: 'Submit Contest Request',
+                      title: 'Log Out',
                       asset: MetaAssets.submitContestRequest,
                       onTap: () {
                         BlocProvider.of<AuthCubit>(context).signOut();
@@ -202,10 +203,18 @@ class ProfileTIleWidget extends StatelessWidget {
                         }
                       },
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: Image(
-                          image: AssetImage(MetaAssets.profileArrowRight)),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ViewProfileScreen()));
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.only(right: 12),
+                        child: Image(
+                            image: AssetImage(MetaAssets.profileArrowRight)),
+                      ),
                     )
                   ],
                 ),

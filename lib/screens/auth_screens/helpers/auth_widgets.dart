@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lobby/utils/meta_assets.dart';
 import 'package:lobby/utils/meta_colors.dart';
 import 'package:lobby/utils/meta_styles.dart';
+import 'package:rive/rive.dart';
 
 buildButton(
     {required String title,
@@ -66,18 +68,19 @@ SnackBar banner(BuildContext context, @required message,
   return SnackBar(
     elevation: 0,
     padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).size.height * .8, top: kToolbarHeight),
+        bottom: MediaQuery.of(context).size.height * .85, top: kToolbarHeight),
     backgroundColor: Colors.transparent,
     behavior: SnackBarBehavior.floating,
     content: MessageWidget(
       message: message,
       isError: isError,
     ),
-    onVisible: () {
-      Future.delayed(Duration(seconds: 2), () {
-        ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-      });
-    },
+    duration: Duration(seconds: 2),
+    // onVisible: () {
+    //   Future.delayed(Duration(seconds: 2), () {
+    //     ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+    //   });
+    // },
   );
 }
 
@@ -99,30 +102,41 @@ class _LoaderState extends State<Loader> {
         width: MediaQuery.of(context).size.width,
         child: Center(
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.75,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                      color: MetaColors.postShadowColor,
-                      blurRadius: 10,
-                      offset: Offset(0, 3),
-                      spreadRadius: 5)
-                ]),
+            // width: MediaQuery.of(context).size.width * 0.75,
+            // decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(12),
+            //     color: Colors.white,
+            //     boxShadow: [
+            //       BoxShadow(
+            //           color: MetaColors.postShadowColor,
+            //           blurRadius: 10,
+            //           offset: Offset(0, 3),
+            //           spreadRadius: 5)
+            //     ]),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  CircularProgressIndicator(),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    width: MediaQuery.of(context).size.height * 0.25,
+                    child: RiveAnimation.asset(
+                      MetaAssets.loaderAnimation,
+                      // artboard: 'New Artboard',
+                      // animations: ['idle_1'],
+                    ),
+                  ),
                   SizedBox(
                     height: 10,
                   ),
                   Text(
                     widget.message ?? "",
-                    style: TextStyle(color: MetaColors.textColor),
+                    style: TextStyle(
+                        color: MetaColors.textColor,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w600),
                   ),
                 ],
               ),

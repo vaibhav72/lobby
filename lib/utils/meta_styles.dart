@@ -2,6 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:lobby/utils/meta_colors.dart';
 
 class MetaStyles {
+  static TextStyle timerTitleStyle = TextStyle(
+    fontSize: 10,
+    fontWeight: FontWeight.w400,
+  );
+  static TextStyle contestFieldsTitleStyle =
+      TextStyle(fontSize: 16, fontWeight: FontWeight.w500);
+  static TextStyle contestFieldsSubTitleStyle = TextStyle(
+    fontSize: 12,
+  );
+  static TextStyle contestFieldRulesStyle = TextStyle(
+    fontSize: 11,
+  );
   static authInputDecoration({
     String? title,
   }) =>

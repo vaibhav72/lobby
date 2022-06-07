@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -125,7 +126,8 @@ Future<SelectedMedia?> selectMedia({
   if (mediaBytes == null) {
     return null;
   }
-  final path = storagePath(
+  log('Heree');
+  final path = await storagePath(
       FirebaseAuth.instance.currentUser!.uid, pickedMedia!.name, isVideo);
   return SelectedMedia(path, mediaBytes, pickedMedia.path, isVideo);
 }
@@ -142,7 +144,7 @@ bool validateFileFormat(String filePath, BuildContext context) {
   return false;
 }
 
-storagePath(String uid, String filePath, bool isVideo) async {
+Future<String> storagePath(String uid, String filePath, bool isVideo) async {
   final timestamp = (await NTP.now()).microsecondsSinceEpoch;
   // Workaround fixed by https://github.com/flutter/plugins/pull/3685
   // (not yet in stable).

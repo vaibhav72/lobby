@@ -9,6 +9,7 @@ import 'package:lobby/bloc/category/category_bloc.dart';
 import 'package:lobby/cubits/navigation/navigation_cubit.dart';
 
 import 'package:lobby/repository/category/category_repository.dart';
+import 'package:lobby/repository/competitions/competition_repository.dart';
 import 'package:lobby/screens/auth_screens/helpers/auth_widgets.dart';
 import 'package:lobby/screens/auth_screens/onboarding_screen.dart';
 import 'package:lobby/screens/auth_screens/sign_in.dart';
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider(create: (context) => CategoryRepository())
+        RepositoryProvider(create: (context) => CategoryRepository()),
+        RepositoryProvider(create: (context) => CompetitionRepository())
       ],
       child: MultiBlocProvider(providers: [
         BlocProvider(create: (context) => AuthCubit()),
@@ -82,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen> {
             },
             builder: (context, state) {
               // print(state);
-              log('building main builder');
+              // log('building main builder');
               if (state is AuthLoggedIn) {
                 return MaterialApp(
                     theme: ThemeData(
@@ -96,6 +98,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           titleTextStyle: TextStyle(
                               color: MetaColors.textColor,
                               fontSize: 20,
+                              fontFamily: "Poppins",
                               fontWeight: FontWeight.w600)),
                       fontFamily: 'Poppins',
                       primarySwatch: Colors.blue,

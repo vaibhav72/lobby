@@ -2,8 +2,8 @@ part of 'counter_cubit.dart';
 
 abstract class CounterState extends Equatable {
   const CounterState({required this.timeRemaining});
-  final Duration timeRemaining;
-  CounterLoaded copyWith({Duration? newTimeRemaining}) {
+  final DurationFormatClass timeRemaining;
+  CounterLoaded copyWith({DurationFormatClass? newTimeRemaining}) {
     return CounterLoaded(timeRemaining: newTimeRemaining ?? this.timeRemaining);
   }
 
@@ -12,11 +12,11 @@ abstract class CounterState extends Equatable {
 }
 
 class CounterLoaded extends CounterState {
-  const CounterLoaded({required Duration timeRemaining})
+  const CounterLoaded({required DurationFormatClass timeRemaining})
       : super(timeRemaining: timeRemaining);
 }
 
 class CounterLoading extends CounterState {
-  CounterLoading({required Duration timeRemaining})
+  CounterLoading({required DurationFormatClass timeRemaining})
       : super(timeRemaining: timeRemaining);
 }

@@ -14,6 +14,12 @@ class UserModel {
   DateTime? createdAt;
   double balance;
   DocumentReference? documentReference;
+  String? bio;
+  String? subtitle;
+  int? contestEntered;
+  int? contestWins;
+  double? cashPrizeWon;
+  List<String> likedPosts;
   @override
   List<Object?> get props => [
         user,
@@ -25,7 +31,13 @@ class UserModel {
         phoneNumber,
         createdAt,
         balance,
-        documentReference
+        documentReference,
+        bio,
+        subtitle,
+        contestEntered,
+        contestWins,
+        cashPrizeWon,
+        likedPosts,
       ];
   UserModel({
     this.user,
@@ -38,20 +50,33 @@ class UserModel {
     this.createdAt,
     required this.phoneNumber,
     this.documentReference,
+    this.bio = '',
+    this.cashPrizeWon = 0,
+    this.contestEntered = 0,
+    this.contestWins = 0,
+    this.subtitle = '',
+    this.likedPosts = const [],
   });
   static CollectionReference get collection =>
       FirebaseFirestore.instance.collection('users');
 
-  UserModel copyWith(
-      {User? user,
-      String? displayImageUrl,
-      bool? isPremium,
-      bool? isAdmin,
-      String? email,
-      String? name,
-      DateTime? createdAt,
-      String? phoneNumber,
-      DocumentReference? documentReference}) {
+  UserModel copyWith({
+    User? user,
+    String? displayImageUrl,
+    bool? isPremium,
+    bool? isAdmin,
+    String? email,
+    String? name,
+    DateTime? createdAt,
+    String? phoneNumber,
+    DocumentReference? documentReference,
+    String? bio,
+    String? subtitle,
+    int? contestEntered,
+    int? contestWins,
+    double? cashPrizeWon,
+    List<String>? likedPosts,
+  }) {
     return UserModel(
         createdAt: this.createdAt,
         user: user ?? this.user,
@@ -62,7 +87,13 @@ class UserModel {
         isAdmin: isAdmin ?? this.isAdmin,
         email: email ?? this.email,
         balance: balance,
-        documentReference: documentReference ?? this.documentReference);
+        documentReference: documentReference ?? this.documentReference,
+        bio: bio ?? this.bio,
+        contestEntered: contestEntered ?? this.contestEntered,
+        contestWins: contestWins ?? this.contestWins,
+        cashPrizeWon: cashPrizeWon ?? this.cashPrizeWon,
+        subtitle: subtitle ?? this.subtitle,
+        likedPosts: likedPosts ?? this.likedPosts);
   }
 
   Map<String, dynamic> toFirestore() {
@@ -74,21 +105,41 @@ class UserModel {
       'isPremium': isPremium,
       'isAdmin': isAdmin,
       'email': email,
-      'balance': balance
+      'balance': balance,
+      'createdAt': createdAt,
+      'documentReference': documentReference,
+      'bio': bio,
+      'subtitle': subtitle,
+      'contestEntered': contestEntered,
+      'contestWins': contestWins,
+      'cashPrizeWon': cashPrizeWon,
+      'likedPosts': likedPosts,
     };
   }
 
   factory UserModel.fromMap(DocumentSnapshot map) {
     return UserModel(
-        name: map['name'] ?? '',
-        // user: User.fromMap(map['user']),
-        documentReference: collection.doc(map.id),
-        displayImageUrl: map['displayImageUrl'] ?? '',
-        phoneNumber: map['phoneNumber'] ?? '',
-        isPremium: map['isPremium'] ?? false,
-        isAdmin: map['isAdmin'] ?? false,
-        email: map['email'] ?? '',
-        balance: (map['balance'] ?? 0).toDouble());
+      name: map['name'] ?? '',
+      // user: User.fromMap(map['user']),
+      documentReference: collection.doc(map.id),
+      displayImageUrl: map['displayImageUrl'] ?? '',
+      phoneNumber: map['phoneNumber'] ?? '',
+      isPremium: map['isPremium'] ?? false,
+      isAdmin: map['isAdmin'] ?? false,
+      email: map['email'] ?? '',
+      balance: (map['balance'] ?? 0).toDouble(),
+      bio: map['bio'] ?? '',
+      subtitle: map['subtitle'] ?? '',
+
+      // createdAt: map['createdAt'] != null
+      //     ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'].seconds * 1000)
+      //     : null,
+      contestEntered: map['contestEntered'] ?? 0,
+      contestWins: map['contestWins'] ?? 0,
+      cashPrizeWon: (map['cashPrizeWon'] ?? 0).toDouble(),
+      likedPosts:
+          (map['likedPosts'].map<String>((e) => e.toString()).toList()) ?? [],
+    );
   }
 
   String toJson() => json.encode(toFirestore());
@@ -113,7 +164,15 @@ class UserModel {
         other.isPremium == isPremium &&
         other.isAdmin == isAdmin &&
         other.email == email &&
-        other.phoneNumber == phoneNumber;
+        other.phoneNumber == phoneNumber &&
+        other.createdAt == createdAt &&
+        // other.documentReference == documentReference &&
+        other.bio == bio &&
+        other.subtitle == subtitle &&
+        other.contestEntered == contestEntered &&
+        other.contestWins == contestWins &&
+        other.cashPrizeWon == cashPrizeWon &&
+        other.likedPosts == likedPosts;
   }
 
   @override

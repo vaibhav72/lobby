@@ -1,18 +1,33 @@
 part of 'create_post_cubit.dart';
 
 class CreatePostState extends Equatable {
-  final PostModel? post;
-  const CreatePostState({this.post});
-
+  const CreatePostState();
   @override
-  List<Object> get props => [post!];
+  List<Object> get props => [];
 }
 
 class CreatePostLoading extends CreatePostState {}
 
-class CreatePostLoaded extends CreatePostState {}
+class CreatePostLoaded extends CreatePostState {
+  final PostModel post;
+  const CreatePostLoaded({required this.post});
+  @override
+  List<Object> get props => [post];
+}
 
-class CreatePostComplete extends CreatePostState {}
+class CreatePostMediaUploading extends CreatePostState {
+  final double data;
+  const CreatePostMediaUploading({required this.data});
+  @override
+  List<Object> get props => [data];
+}
+
+class CreatePostComplete extends CreatePostState {
+  final PostModel post;
+  const CreatePostComplete({required this.post});
+  @override
+  List<Object> get props => [post];
+}
 
 class CreatePostError extends CreatePostState {
   String? message;

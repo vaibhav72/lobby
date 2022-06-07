@@ -1,5 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -31,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: Settings(),
-        body: Builder(builder: (context) {
+        body: BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
           return Container(
             child: Column(
               children: [
@@ -110,96 +113,125 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-                Container(
-                  // decoration: BoxDecoration(boxShadow: [
-                  //   BoxShadow(color: MetaColors.categoryShadow, blurRadius: 5)
-                  // ]),
-                  height: MediaQuery.of(context).size.height * .1,
-                  width: MediaQuery.of(context).size.width,
-                  child: BlocBuilder<CategoryBloc, CategoryState>(
-                    buildWhen: (previous, current) => previous != current,
-                    builder: (context, state) {
-                      if (state is CategoryLoaded)
-                        // ignore: curly_braces_in_flow_control_structures
-                        return ListView.builder(
-                            // padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: state.categoryList!.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ViewContestScreen(
-                                                  category:
-                                                      state.categoryList![index],
-                                                )));
-                                  },
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(15),
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          .45,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color:
-                                                    MetaColors.categoryShadow,
-                                                offset: Offset(0, 3),
-                                                blurRadius: 25)
-                                          ],
-                                          image: DecorationImage(
-                                              fit: BoxFit.fill,
-                                              image: NetworkImage(state
-                                                  .categoryList![index]
-                                                  .categoryImage))),
-                                      child: BackdropFilter(
-                                          filter: ImageFilter.blur(
-                                              sigmaX: 2, sigmaY: 2),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Center(
-                                              child: Text(
-                                                state.categoryList![index]
-                                                    .categoryName,
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            ),
-                                          )),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            });
-                      if (state is CategoryLoading) {
-                        return CircularProgressIndicator();
-                      }
-                      return SizedBox.shrink();
-                    },
-                  ),
-                ),
+                CategoryListWidget(),
                 Expanded(
                     child: Container(
-                        decoration: BoxDecoration(boxShadow: [
-                          BoxShadow(
-                              color: MetaColors.postShadowColor, blurRadius: 25)
-                        ]),
+                        // decoration: BoxDecoration(boxShadow: [
+                        //   BoxShadow(
+                        //       color: MetaColors.postShadowColor, blurRadius: 25)
+                        // ]),
                         child: ViewAllPosts())),
               ],
             ),
           );
         }));
+  }
+}
+
+class CategoryListWidget extends StatelessWidget {
+  const CategoryListWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // decoration: BoxDecoration(boxShadow: [
+      //   BoxShadow(color: MetaColors.categoryShadow, blurRadius: 5)
+      // ]),
+      height: MediaQuery.of(context).size.height * .1,
+      width: MediaQuery.of(context).size.width,
+      child: BlocBuilder<CategoryBloc, CategoryState>(
+        buildWhen: (previous, current) => previous != current,
+        builder: (context, state) {
+          if (state is CategoryLoaded)
+            // ignore: curly_braces_in_flow_control_structures
+            return ListView.builder(
+                // padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: state.categoryList!.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ViewContestScreen(
+                                      category: state.categoryList![index],
+                                    )));
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * .45,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: MetaColors.categoryShadow,
+                                    offset: Offset(0, 3),
+                                    blurRadius: 25)
+                              ],
+                              image: DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: CachedNetworkImageProvider(state
+                                      .categoryList![index].categoryImage))),
+                          child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Center(
+                                  child: Text(
+                                    state.categoryList![index].categoryName,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                              )),
+                        ),
+                      ),
+                    ),
+                  );
+                });
+          if (state is CategoryLoading) {
+            return Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * .45,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                          color: MetaColors.categoryShadow,
+                          offset: Offset(0, 3),
+                          blurRadius: 25)
+                    ],
+                  ),
+                  child: Shimmer.fromColors(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * .45,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12)),
+                        child: Center(child: Text('Painting')),
+                      ),
+                      baseColor: Colors.white,
+                      highlightColor: MetaColors.categoryShadow),
+                ),
+              ),
+            );
+          }
+          return SizedBox.shrink();
+        },
+      ),
+    );
   }
 }
 // import 'dart:ui';

@@ -26,6 +26,7 @@ class PostModel {
   String? id;
   String competitionUserImage;
   String competitionUserName;
+  String postUserId;
 
   List<DocumentReference> likes;
   PostModel(
@@ -45,6 +46,7 @@ class PostModel {
       required this.competitionId,
       required this.competitionUserImage,
       required this.competitionUserName,
+      required this.postUserId,
       this.id});
   static CollectionReference get collection =>
       FirebaseFirestore.instance.collection('socialPosts');
@@ -67,23 +69,23 @@ class PostModel {
     String? competitionUserName,
   }) {
     return PostModel(
-      competitionId: competitionId ?? this.competitionId,
-      postCreated: postCreated ?? this.postCreated,
-      postImage: postImage ?? this.postImage,
-      postVideo: postVideo ?? this.postVideo,
-      postDescription: postDescription ?? this.postDescription,
-      postUser: postUser ?? this.postUser,
-      postDisplayName: postDisplayName ?? this.postDisplayName,
-      postUserImage: postUserImage ?? this.postUserImage,
-      likes: likes ?? this.likes,
-      postUserName: postUserName ?? this.postUserName,
-      categoryId: categoryId ?? this.categoryId,
-      competitionByUrl: competitionByUrl ?? this.competitionByUrl,
-      competitionImage: competitionImage ?? this.competitionImage,
-      competitionTitle: competitionTitle ?? this.competitionTitle,
-      competitionUserImage: competitionUserImage ?? this.competitionUserImage,
-      competitionUserName: competitionUserName ?? this.competitionUserName,
-    );
+        competitionId: competitionId ?? this.competitionId,
+        postCreated: postCreated ?? this.postCreated,
+        postImage: postImage ?? this.postImage,
+        postVideo: postVideo ?? this.postVideo,
+        postDescription: postDescription ?? this.postDescription,
+        postUser: postUser ?? this.postUser,
+        postDisplayName: postDisplayName ?? this.postDisplayName,
+        postUserImage: postUserImage ?? this.postUserImage,
+        likes: likes ?? this.likes,
+        postUserName: postUserName ?? this.postUserName,
+        categoryId: categoryId ?? this.categoryId,
+        competitionByUrl: competitionByUrl ?? this.competitionByUrl,
+        competitionImage: competitionImage ?? this.competitionImage,
+        competitionTitle: competitionTitle ?? this.competitionTitle,
+        competitionUserImage: competitionUserImage ?? this.competitionUserImage,
+        competitionUserName: competitionUserName ?? this.competitionUserName,
+        postUserId: postUserId);
   }
 
   Map<String, dynamic> toFirestore() {
@@ -104,6 +106,7 @@ class PostModel {
       'likes': likes.map((x) => x).toList(),
       'competitionUserImage': competitionUserImage,
       'competitionUserName': competitionUserName,
+      'postUserId': postUserId
     };
   }
 
@@ -117,12 +120,13 @@ class PostModel {
         postImage: doc['postImage'] ?? '',
         competitionId: doc['competitionId'] ?? '',
         id: doc.id,
-        postUserName: '',
+        postUserId: doc['postUserId'] ?? '',
         postVideo: doc['postVideo'] ?? '',
         postDescription: doc['postDescription'] ?? '',
         postUser: (doc['postUser']),
         postDisplayName: doc['postDisplayName'] ?? '',
         postUserImage: doc['postUserImage'] ?? '',
+        postUserName: doc['postUserName'] ?? '',
         categoryId: doc["categoryId"] ?? '',
         likes: doc['likes'] != null && doc['likes'].isNotEmpty
             ? List<DocumentReference>.from(doc['likes']?.map((x) => (x)))

@@ -2,16 +2,21 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lobby/models/post_model.dart';
 import 'package:lobby/models/user_model.dart';
+import 'package:lobby/repository/post/post_repository.dart';
 import 'package:ntp/ntp.dart';
+import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-
+  PaginateRefreshedChangeListener refreshChangeListener =
+      PaginateRefreshedChangeListener();
   AuthCubit() : super(AuthLoading()) {
     try {
       _userSubscription = user.listen((user) async {
@@ -139,6 +144,17 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (_) {
       log(_.toString());
       emit(AuthError(message: _.toString(), userCredentials: user));
+    }
+  }
+
+  likePost(PostModel postModel) async {
+    try {
+      await state.user!.documentReference!.update({
+        'likedPosts': FieldValue.arrayUnion([postModel.id])
+      });
+      PostRepository().likePost(state.user!.documentReference!, postModel);
+    } catch (error) {
+      throw Exception(error.toString());
     }
   }
 

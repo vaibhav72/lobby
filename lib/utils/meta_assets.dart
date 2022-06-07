@@ -4,10 +4,14 @@ class MetaAssets {
   static const loginIllustration = 'assets/animations/login.json';
   static const signUpIllustration = 'assets/animations/sign_up.json';
   static const otpIllustration = 'assets/animations/otp.json';
+  static const contestJoiningSuccessIllustration =
+      'assets/animations/contest_joining_success.json';
   static const String otpIcon = 'assets/otp_icon.png';
 
   //competition Icons
   static const String giftIcon = 'assets/gift_closed.png';
+
+  static const String loaderAnimation = 'assets/loader_new.riv';
 
   //profileIcons
   static const String aboutUsIcon = 'assets/about_us.png';

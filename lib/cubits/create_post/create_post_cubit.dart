@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lobby/models/category_model.dart';
 import 'package:lobby/models/post_model.dart';
@@ -12,45 +15,42 @@ part 'create_post_state.dart';
 
 class CreatePostCubit extends Cubit<CreatePostState> {
   final PostRepository _postRepository;
-  final CategoryModel categoryModel;
+  final String categoryId;
   CreatePostCubit(
-      {required PostRepository? postRepository, required this.categoryModel})
+      {required PostRepository? postRepository, required this.categoryId})
       : _postRepository = postRepository ?? PostRepository(),
         super(CreatePostLoading());
 
-  addPost(
-      {required String title,
-      required String description,
-      required String currentUserImage,
-      required DocumentReference currentUserRef,
-      required String postUserName,
-      required String competitionId,
-      required SelectedMedia media}) async {
+  addPost({required PostModel post, required SelectedMedia media}) async {
     try {
       emit(CreatePostLoading());
-      String url =
-          await _postRepository.uploadData(media.storagePath, media.bytes);
-      if (url != null) {
-        DocumentReference documentReference = await _postRepository.addPost(
-            postModel: PostModel(
-                competitionByUrl: currentUserRef,
-                competitionUserImage: '',
-                competitionUserName: '',
-                competitionId: competitionId,
-                competitionImage: '',
-                competitionTitle: '',
-                postCreated:(await NTP.now()),
+      Stream<TaskSnapshot> result =
+          _postRepository.uploadData(media.storagePath, media.bytes);
+
+      result.listen((data) async {
+        log((data.bytesTransferred / data.totalBytes).toString());
+        if (data.state == TaskState.running) {
+          emit(CreatePostMediaUploading(
+              data: (data.bytesTransferred / data.totalBytes)));
+        }
+        if (data.state == TaskState.success) {
+          print("success");
+          String url = await data.ref.getDownloadURL();
+          if (url.isNotEmpty) {
+            await _postRepository.addPost(
+              postModel: post.copyWith(
                 postImage: media.isVideo ? "" : url,
                 postVideo: !media.isVideo ? "" : url,
-                postDescription: description,
-                postUser: currentUserRef,
-                postDisplayName: title,
-                postUserName: postUserName,
-                postUserImage: currentUserImage,
-                likes: [],
-                categoryId: categoryModel.categoryId));
-        if (documentReference != null) emit(CreatePostComplete());
-      }
+              ),
+            );
+            emit(CreatePostComplete(post: post));
+          }
+        }
+      });
+
+      // if (url.isNotEmpty) {
+
+      // }
     } catch (error) {
       emit(CreatePostError(message: error.toString()));
     }
